@@ -57,6 +57,7 @@ resource "aws_launch_configuration" "app" {
 echo ECS_CLUSTER=${aws_ecs_cluster.main.name} >> /etc/ecs/ecs.config
 EOF
 
+  # TODO(rnagle): do not assign public IP addresses
   associate_public_ip_address = true
 
   lifecycle {
