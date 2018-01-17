@@ -1,0 +1,15 @@
+[
+  {
+    "cpu": 256,
+    "essential": true,
+    "image": "${image_url}",
+    "memory": 512,
+    "name": "${container_name}",
+    "portMappings": [
+      {
+        "containerPort": ${container_port},
+        "hostPort": ${host_port}
+      }
+    ]
+  }
+]
