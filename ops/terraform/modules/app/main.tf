@@ -112,8 +112,8 @@ resource "aws_security_group" "instance_sg" {
 
   ingress {
     protocol  = "tcp"
-    from_port = "${var.host_port}"
-    to_port   = "${var.host_port}"
+    from_port = 32768
+    to_port   = 61000
 
     security_groups = [
       "${aws_security_group.lb_sg.id}",
@@ -146,7 +146,7 @@ data "template_file" "task_definition" {
     image_url      = "${var.ecr_img_url}:${var.service_version}"
     container_name = "${var.container_name}"
     container_port = "${var.container_port}"
-    host_port      = "${var.host_port}"
+    host_port      = 0
   }
 }
 
