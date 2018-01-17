@@ -1,7 +1,7 @@
 FROM ruby:2.5.0
-RUN apt-get install curl
-RUN curl -sL https://deb.nodesource.com/setup_9.x | bash -
-RUN apt-get update -qq && apt-get install -y build-essential libpq-dev nodejs
+# I don't think I actually need node?
+RUN apt-get -qq install curl
+RUN apt-get update -qq && apt-get install -y build-essential libpq-dev
 RUN mkdir /myapp
 WORKDIR /myapp
 COPY Gemfile /myapp/Gemfile
