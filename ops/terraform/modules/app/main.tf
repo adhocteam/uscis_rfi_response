@@ -146,7 +146,6 @@ data "template_file" "task_definition" {
     image_url      = "${var.ecr_img_url}:${var.service_version}"
     container_name = "${var.container_name}"
     container_port = "${var.container_port}"
-    host_port      = 0
   }
 }
 
