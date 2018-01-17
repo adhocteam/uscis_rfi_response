@@ -10,35 +10,30 @@ class App extends Component {
     this.readFile = this.readFile.bind(this);
   }
 
-  // stuck trying to set the state with the bytes, so i just put a fetch
-  // call to send it to the server.
+  // reads in file and sets state to file contents
   readFile() {
     var preview = document.querySelector("img");
 
     var file = document.querySelector("input[type=file]").files[0];
     var reader = new FileReader();
 
-    reader.addEventListener(
-      "load",
-      function() {
-        preview.src = reader.result;
-        console.log(reader.result);
+    // on file load, loads the base64 bytes and image name into the component state
+    let loadBytes = () => {
+      preview.src = reader.result;
+      console.log(reader);
 
-        fetch("/api/upload", {
-          method: "post",
-          headers: {
-            Accept: "application/json, text/plain, */*",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            image_name: file.name,
-            image_base64: reader.result,
-            timestamp: new Date().toISOString()
-          })
-        });
-      },
-      false
-    );
+      this.setState(p => ({
+        image_base64: reader.result,
+        image_name: file.name,
+        timestamp: new Date().toISOString()
+      }));
+    };
+
+    // pass component into loadBytes function
+    this.loadBytes = loadBytes.bind(this);
+
+    //load bytes
+    reader.addEventListener("load", loadBytes, false);
 
     if (file) {
       reader.readAsDataURL(file);
@@ -50,6 +45,10 @@ class App extends Component {
         <input className="Input" type="file" onChange={this.readFile} />
         <h3> image preview: </h3>
         <img src="" height="200" alt="Image preview..." />
+        <h3> b64 bytes </h3>
+        {this.state.image_base64}
+        <h3> filename </h3>
+        {this.state.image_name}
       </div>
     );
   }
