@@ -2,17 +2,10 @@
 
 set -e
 
-if [[ ! -z "$1" ]]
-then
-  REPO="$1"
-else
-  echo "Must provide a image/repo name"
-  exit 1
-fi
-
+REPO="uscis-backend"
 REGION="us-east-1"
 FULLREPO="968246069280.dkr.ecr.us-east-1.amazonaws.com/$REPO"
-TAG=${2:-latest}
+TAG=${1:-latest}
 
 # Login to ECR
 $(aws ecr get-login --no-include-email --region=$REGION)

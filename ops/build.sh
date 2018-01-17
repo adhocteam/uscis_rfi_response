@@ -10,6 +10,6 @@ fi
 
 cd ../backend
 
-TAG=${2:-latest}
+TAG=${1:-latest}
 
 docker build -t uscis-backend:$TAG .

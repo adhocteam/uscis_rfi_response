@@ -10,5 +10,5 @@ then
   exit 1
 fi
 
-./build.sh uscis-backend $VERSION
-./push.sh uscis-backend $VERSION
+./build.sh $VERSION
+./push.sh $VERSION
