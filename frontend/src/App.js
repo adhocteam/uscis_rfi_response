@@ -6,7 +6,7 @@ class App extends Component {
     super(props);
     this.state = {
       reader: null,
-      uuid: null,
+      uuid: "",
       image_base64: null,
       image_name: null,
       timestamp: null
@@ -55,7 +55,20 @@ class App extends Component {
   handleSubmit(e) {
     e.preventDefault();
     if (this.validateForm()) {
-      alert("Passed validation; POST to /api/upload");
+      // post info to API, get back signed URL, upload to URL
+      fetch("/api/presigned_url", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          user_id: this.state.uuid,
+          image_name: this.state.image_name
+        })
+      }).then(resp => {
+        console.log(resp);
+      });
     } else {
       alert("Please provide a UUID and an image.");
     }
