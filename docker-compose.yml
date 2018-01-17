@@ -15,7 +15,7 @@ services:
     build: frontend
     command: npm start
     volumes:
-      - ./frontend/:/myapp
+      - ./frontend/:/app
     ports:
       - "3000:3000"
     depends_on:
