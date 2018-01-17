@@ -1,20 +1,28 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe ApiController, type: :request do
+  describe 'post #presigned_url' do
+    before do
+    end
 
-  describe "post #upload" do
-    it "returns http success" do
+    it 'returns http success' do
       headers = { 'CONTENT_TYPE' => 'application/json' }
-      post "/api/upload", params: <<-POST, headers: headers
-{
-  "user_id": "e3ca6d96454e4a508a677e9e6c3dc3e3",
-  "image_name": "my cat.jpg",
-  "image_base64": "f3u4o2igowh8390t4h8w39th40389wth48390whl…",
-  "timestamp": "2018-01-16T17:00:03-05:00"
-}
-POST
+      # to generate the image, I found a tiny png world map, and did:
+      # base64 < world_tiny.png
+      post '/api/presigned_url', params: <<~POST, headers: headers
+        {
+          "user_id": "e3ca6d96454e4a508a677e9e6c3dc3e3",
+          "image_name": "my cat.jpg",
+          "timestamp": "2018-01-16T17:00:03-05:00"
+        }
+      POST
       expect(response).to have_http_status(:success)
+      url = 'https://uscis-rfds.s3.us-stubbed-1.amazonaws.com/e3ca6d96454e4a508a677e9e6c3dc3e3-my%20cat.jpg'
+      body = JSON.parse(response.body)
+      expect(body['status']).to eq 'ok'
+      expect(body['url']).to match url
     end
   end
-
 end
