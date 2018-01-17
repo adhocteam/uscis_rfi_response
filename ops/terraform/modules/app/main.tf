@@ -4,61 +4,11 @@ provider "aws" {
 
 ## EC2
 
-### Network
-
-data "aws_availability_zones" "available" {}
-
-resource "aws_vpc" "main" {
-  cidr_block = "10.10.0.0/16"
-
-  tags {
-    Name = "ecs-${var.container_name}"
-  }
-}
-
-resource "aws_subnet" "main" {
-  count             = "${var.az_count}"
-  cidr_block        = "${cidrsubnet(aws_vpc.main.cidr_block, 8, count.index)}"
-  availability_zone = "${data.aws_availability_zones.available.names[count.index]}"
-  vpc_id            = "${aws_vpc.main.id}"
-
-  tags {
-    Name = "ecs-${var.container_name}"
-  }
-}
-
-resource "aws_internet_gateway" "gw" {
-  vpc_id = "${aws_vpc.main.id}"
-
-  tags {
-    Name = "ecs-${var.container_name}"
-  }
-}
-
-resource "aws_route_table" "r" {
-  vpc_id = "${aws_vpc.main.id}"
-
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = "${aws_internet_gateway.gw.id}"
-  }
-
-  tags {
-    Name = "ecs-${var.container_name}"
-  }
-}
-
-resource "aws_route_table_association" "a" {
-  count          = "${var.az_count}"
-  subnet_id      = "${element(aws_subnet.main.*.id, count.index)}"
-  route_table_id = "${aws_route_table.r.id}"
-}
-
 ### Compute
 
 resource "aws_autoscaling_group" "app" {
   name                 = "tf-${var.container_name}-asg"
-  vpc_zone_identifier  = ["${aws_subnet.main.*.id}"]
+  vpc_zone_identifier  = ["${var.subnet_ids}"]
   min_size             = "${var.asg_min}"
   max_size             = "${var.asg_max}"
   desired_capacity     = "${var.asg_desired}"
@@ -119,7 +69,7 @@ EOF
 resource "aws_security_group" "lb_sg" {
   description = "controls access to the application ELB"
 
-  vpc_id = "${aws_vpc.main.id}"
+  vpc_id = "${vpc_id}"
   name   = "ecs-${var.container_name}-lb-sg"
 
   ingress {
@@ -146,7 +96,7 @@ resource "aws_security_group" "lb_sg" {
 
 resource "aws_security_group" "instance_sg" {
   description = "controls direct access to application instances"
-  vpc_id      = "${aws_vpc.main.id}"
+  vpc_id      = "${vpc_id}"
   name        = "ecs-${var.container_name}-instsg"
 
   ingress {
@@ -190,6 +140,7 @@ resource "aws_ecs_cluster" "main" {
 data "template_file" "task_definition" {
   template = "${file("${path.module}/templates/task-definition.json")}"
 
+  # TODO(rnagle): add the ability to specify a command
   vars {
     image_url      = "${var.ecr_img_url}:latest"
     container_name = "${var.container_name}"
@@ -314,7 +265,7 @@ resource "aws_alb_target_group" "main" {
   name     = "tf-example-ecs-example-web-app"
   port     = 80
   protocol = "HTTP"
-  vpc_id   = "${aws_vpc.main.id}"
+  vpc_id   = "${vpc_id}"
 
   tags {
     Name = "ecs-${var.container_name}"
@@ -323,7 +274,7 @@ resource "aws_alb_target_group" "main" {
 
 resource "aws_alb" "main" {
   name            = "tf-example-alb-ecs"
-  subnets         = ["${aws_subnet.main.*.id}"]
+  subnets         = ["${var.subnet_ids}"]
   security_groups = ["${aws_security_group.lb_sg.id}"]
 
   tags {

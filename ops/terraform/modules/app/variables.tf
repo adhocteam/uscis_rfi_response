@@ -1,3 +1,12 @@
+variable "vpc_id" {
+  description = "The ID of the VPC where the app will be deployed"
+}
+
+variable "subnet_ids" {
+  description = "Subnets where resources will be located"
+  type = "list"
+}
+
 variable "ecr_img_url" {
   description = "URL of Elastic Container Registry for the app"
 }
