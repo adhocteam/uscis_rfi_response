@@ -24,16 +24,11 @@ variable "admin_cidr_ingress" {
 }
 
 variable "container_port" {
-  default = "8080"
+  default = "3000"
 }
 
 variable "host_port" {
-  default = "9090"
-}
-
-variable "az_count" {
-  description = "Number of AZs to cover in a given AWS region"
-  default     = "2"
+  default = "8080"
 }
 
 variable "instance_type" {

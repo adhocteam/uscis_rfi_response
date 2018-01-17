@@ -69,7 +69,7 @@ EOF
 resource "aws_security_group" "lb_sg" {
   description = "controls access to the application ELB"
 
-  vpc_id = "${vpc_id}"
+  vpc_id = "${var.vpc_id}"
   name   = "ecs-${var.container_name}-lb-sg"
 
   ingress {
@@ -96,7 +96,7 @@ resource "aws_security_group" "lb_sg" {
 
 resource "aws_security_group" "instance_sg" {
   description = "controls direct access to application instances"
-  vpc_id      = "${vpc_id}"
+  vpc_id      = "${var.vpc_id}"
   name        = "ecs-${var.container_name}-instsg"
 
   ingress {
@@ -111,8 +111,8 @@ resource "aws_security_group" "instance_sg" {
 
   ingress {
     protocol  = "tcp"
-    from_port = 9090
-    to_port   = 9090
+    from_port = "${var.host_port}"
+    to_port   = "${var.host_port}"
 
     security_groups = [
       "${aws_security_group.lb_sg.id}",
@@ -134,7 +134,7 @@ resource "aws_security_group" "instance_sg" {
 ## ECS
 
 resource "aws_ecs_cluster" "main" {
-  name = "terraform_example_ecs_cluster"
+  name = "terraform-${var.container_name}-ecs-cluster"
 }
 
 data "template_file" "task_definition" {
@@ -149,15 +149,15 @@ data "template_file" "task_definition" {
   }
 }
 
-resource "aws_ecs_task_definition" "example_web_app" {
-  family                = "tf_example_web_app_td"
+resource "aws_ecs_task_definition" "app_task_def" {
+  family                = "${var.container_name}-task-def"
   container_definitions = "${data.template_file.task_definition.rendered}"
 }
 
 resource "aws_ecs_service" "main" {
-  name            = "tf-example-ecs-example-web-app"
+  name            = "tf-ecs-${var.container_name}"
   cluster         = "${aws_ecs_cluster.main.id}"
-  task_definition = "${aws_ecs_task_definition.example_web_app.arn}"
+  task_definition = "${aws_ecs_task_definition.app_task_def.arn}"
   desired_count   = 1
   iam_role        = "${aws_iam_role.ecs_service.name}"
 
@@ -168,7 +168,7 @@ resource "aws_ecs_service" "main" {
   load_balancer {
     target_group_arn = "${aws_alb_target_group.main.id}"
     container_name   = "${var.container_name}"
-    container_port   = "8080"
+    container_port   = "${var.container_port}"
   }
 
   depends_on = [
@@ -180,7 +180,7 @@ resource "aws_ecs_service" "main" {
 ## IAM
 
 resource "aws_iam_role" "ecs_service" {
-  name = "tf_example_ecs_role"
+  name = "tf-${var.container_name}-ecs-role"
 
   assume_role_policy = <<EOF
 {
@@ -200,7 +200,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "ecs_service" {
-  name = "tf_example_ecs_policy"
+  name = "tf-${var.container_name}-ecs-policy"
   role = "${aws_iam_role.ecs_service.name}"
 
   policy = <<EOF
@@ -230,7 +230,7 @@ resource "aws_iam_instance_profile" "app" {
 }
 
 resource "aws_iam_role" "app_instance" {
-  name = "tf-ecs-example-instance-role"
+  name = "tf-ecs-${var.container_name}-instance-role"
 
   assume_role_policy = <<EOF
 {
@@ -254,7 +254,7 @@ data "template_file" "instance_profile" {
 }
 
 resource "aws_iam_role_policy" "instance" {
-  name   = "TfEcsExampleInstanceRole"
+  name   = "tf-ecs-${var.container_name}-instance-role"
   role   = "${aws_iam_role.app_instance.name}"
   policy = "${data.template_file.instance_profile.rendered}"
 }
@@ -262,10 +262,10 @@ resource "aws_iam_role_policy" "instance" {
 ## ALB
 
 resource "aws_alb_target_group" "main" {
-  name     = "tf-example-ecs-example-web-app"
+  name     = "tf-ecs-${var.container_name}"
   port     = 80
   protocol = "HTTP"
-  vpc_id   = "${vpc_id}"
+  vpc_id   = "${var.vpc_id}"
 
   tags {
     Name = "ecs-${var.container_name}"
@@ -273,7 +273,7 @@ resource "aws_alb_target_group" "main" {
 }
 
 resource "aws_alb" "main" {
-  name            = "tf-example-alb-ecs"
+  name            = "tf-${var.container_name}-alb-ecs"
   subnets         = ["${var.subnet_ids}"]
   security_groups = ["${aws_security_group.lb_sg.id}"]
 
