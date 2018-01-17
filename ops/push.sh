@@ -12,7 +12,7 @@ fi
 
 REGION="us-east-1"
 FULLREPO="968246069280.dkr.ecr.us-east-1.amazonaws.com/$REPO"
-TAG=${1:-latest}
+TAG=${2:-latest}
 
 # Login to ECR
 $(aws ecr get-login --no-include-email --region=$REGION)

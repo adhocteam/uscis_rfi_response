@@ -11,7 +11,7 @@ To push to the Elastic Container Registry:
 
 ```
 cd ops
-./push.sh
+./push.sh uscis-backend
 ```
 
 Convenience for running `./build.sh` and `./push.sh`:

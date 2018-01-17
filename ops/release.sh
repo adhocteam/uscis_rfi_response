@@ -2,5 +2,5 @@
 
 set -e
 
-. build.sh
-. push.sh
+./build.sh
+./push.sh uscis-backend latest
