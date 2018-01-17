@@ -2,17 +2,16 @@ provider "aws" {
   region = "${var.aws_region}"
 }
 
-variable "name" {
-  default = "uscis-backend"
-}
-
-module "registry" {
+#
+# Backend
+#
+module "uscis_backend_registry" {
   source = "../modules/ecr"
 
-  repository_name = "${var.name}"
+  repository_name = "uscis-backend"
 }
 
-module "application" {
+module "uscis_backend" {
   source = "../modules/app"
 
   # TODO: lock this down
@@ -21,6 +20,6 @@ module "application" {
   # TODO: allow setting a different key
   key_name           = "ecs"
 
-  container_name     = "${var.name}"
-  ecr_img_url        = "${module.registry.repository_url}"
+  container_name     = "uscis-backend"
+  ecr_img_url        = "${module.uscis_backend_registry.repository_url}"
 }
