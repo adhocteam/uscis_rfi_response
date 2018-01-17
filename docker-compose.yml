@@ -1,0 +1,22 @@
+version: '3'
+services:
+  db:
+    image: postgres
+  backend:
+    build: backend
+    command: bundle exec rails s -p 3001 -b '0.0.0.0'
+    volumes:
+      - ./backend/:/myapp
+    ports:
+      - "3001:3001"
+    depends_on:
+      - db
+  frontend:
+    build: frontend
+    command: npm start
+    volumes:
+      - ./frontend/:/myapp
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
