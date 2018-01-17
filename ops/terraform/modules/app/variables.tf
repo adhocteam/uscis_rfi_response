@@ -31,6 +31,10 @@ variable "host_port" {
   default = "8080"
 }
 
+variable "service_version" {
+  default = "latest"
+}
+
 variable "instance_type" {
   default     = "t2.small"
   description = "AWS instance type"

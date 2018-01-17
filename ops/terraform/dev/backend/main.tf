@@ -36,4 +36,6 @@ module "uscis_backend" {
 
   vpc_id = "${data.aws_vpc.uscis_vpc.id}"
   subnet_ids = ["${data.aws_subnet_ids.uscis_subnet_ids.ids}"]
+
+  service_version    = "${var.service_version}"
 }

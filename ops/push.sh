@@ -2,7 +2,7 @@
 
 set -e
 
-if [[ "$1" != "" ]]
+if [[ ! -z "$1" ]]
 then
   REPO="$1"
 else
