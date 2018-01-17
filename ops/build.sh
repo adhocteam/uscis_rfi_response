@@ -8,16 +8,8 @@ then
   exit 1
 fi
 
-if [[ ! -z "$1" ]]
-then
-  IMAGE="$1"
-else
-  echo "Must provide a image name"
-  exit 1
-fi
-
 cd ../backend
 
 TAG=${2:-latest}
 
-docker build -t $IMAGE:$TAG .
+docker build -t uscis-backend:$TAG .
