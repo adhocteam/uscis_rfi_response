@@ -1,0 +1,17 @@
+[
+  {
+    "cpu": 256,
+    "essential": true,
+    "image": "${image_url}",
+    "memory": 512,
+    "name": "${container_name}",
+    "command": [
+      "bundle", "exec", "unicorn", "-c", "config/unicorn.rb"
+    ],
+    "portMappings": [
+      {
+        "containerPort": ${container_port}
+      }
+    ]
+  }
+]
