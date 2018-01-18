@@ -2,6 +2,8 @@
 
 # API Controller
 class ApiController < ApplicationController
+  before_action :authenticate_user!
+
   def presigned_url
     begin
       signer = Aws::S3::Presigner.new
