@@ -15,6 +15,6 @@ class ApiController < ApplicationController
     rescue Aws::S3::Errors::ServiceError => e
       render json: { 'status': e.to_s }, status: :unauthorized && return
     end
-    render json: { 'status': 'ok', 'url': url }
+    render json: { 'status': 'ok', 'signedUrl': url }
   end
 end

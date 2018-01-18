@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import ReactS3Uploader from "react-s3-uploader";
 import "./App.css";
 
 class App extends Component {
@@ -11,7 +12,9 @@ class App extends Component {
       image_name: null,
       timestamp: null
     };
+    this.s3Uploader = null;
     this.readFile = this.readFile.bind(this);
+    this.getSignedUrl = this.getSignedUrl.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -25,7 +28,6 @@ class App extends Component {
     // on file load, loads the base64 bytes and image name into the component state
     let loadBytes = () => {
       preview.src = reader.result;
-      console.log(reader);
 
       this.setState(p => ({
         image_base64: reader.result,
@@ -52,23 +54,33 @@ class App extends Component {
     return validUUID && validImage;
   }
 
+  getSignedUrl(file, callback) {
+    fetch("/api/presigned_url", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        user_id: this.state.uuid,
+        image_name: this.state.image_name
+      })
+    })
+      .then(resp => {
+        if (resp.status === 200) {
+          return resp.json();
+        }
+      })
+      .then(json => {
+        callback(json);
+      });
+  }
+
   handleSubmit(e) {
     e.preventDefault();
     if (this.validateForm()) {
       // post info to API, get back signed URL, upload to URL
-      fetch("/api/presigned_url", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          user_id: this.state.uuid,
-          image_name: this.state.image_name
-        })
-      }).then(resp => {
-        console.log(resp);
-      });
+      this.s3Uploader.uploadFile();
     } else {
       alert("Please provide a UUID and an image.");
     }
@@ -91,7 +103,15 @@ class App extends Component {
             />
           </label>
           <br />
-          <input type="file" onChange={this.readFile} />
+          <ReactS3Uploader
+            autoUpload={false}
+            uploadRequestHeaders={{}}
+            getSignedUrl={this.getSignedUrl}
+            ref={s3Uploader => {
+              this.s3Uploader = s3Uploader;
+            }}
+            onChange={this.readFile}
+          />
           <br />
           <input type="submit" value="Submit" />
         </form>
