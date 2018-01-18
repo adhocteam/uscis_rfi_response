@@ -15,4 +15,4 @@ The solution should include a working CI/CD Pipeline in AWS using Docker contain
 # Development
 
 1. Use `.env.sample` to create a `.env` file with your AWS credentials.
-2. Run `docker-compose build` to build the containers with dependencies, then `docker-compose run` to start the application.  The frontend should be served at http://localhost:3000.
+2. Run `docker-compose build` to build the containers with dependencies, then `docker-compose up` to start the application.  The frontend should be served at http://localhost:3000.
