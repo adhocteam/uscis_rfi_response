@@ -5,13 +5,12 @@ class ApiController < ApplicationController
   def presigned_url
     begin
       signer = Aws::S3::Presigner.new
-      key = "#{params['user_id']}-#{params['image_name']}"
-      # XXX: figure out content type
+      key = "#{params.fetch('user_id')}-#{params.fetch('image_name')}"
       url = signer.presigned_url(:put_object,
                                  bucket: 'uscis-rfds',
                                  key: key,
                                  acl: 'public-read',
-                                 content_type: 'image/png')
+                                 content_type: params.fetch('image_type'))
     rescue Aws::S3::Errors::ServiceError => e
       render json: { 'status': e.to_s }, status: :unauthorized && return
     end
