@@ -71,7 +71,8 @@ class App extends Component {
       },
       body: JSON.stringify({
         user_id: this.state.uuid,
-        image_name: this.state.image_name
+        image_name: this.state.image_name,
+        image_type: this.state.image_type
       })
     })
       .then(resp => {
