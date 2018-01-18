@@ -5,14 +5,17 @@ import "./App.css";
 class App extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      reader: null,
       uuid: "",
       image_base64: null,
       image_name: null,
       timestamp: null
     };
+
+    // for calling ReactS3Uploader's uploadFile from outside the component
     this.s3Uploader = null;
+
     this.readFile = this.readFile.bind(this);
     this.getSignedUrl = this.getSignedUrl.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -47,6 +50,7 @@ class App extends Component {
     }
   }
 
+  // messy validation; checks that uuid and image are not null.
   validateForm() {
     let validUUID = this.state.uuid && this.state.uuid !== "";
     let validImage =
@@ -54,6 +58,8 @@ class App extends Component {
     return validUUID && validImage;
   }
 
+  // custom function for ReactS3Uploader
+  // TODO: error handling
   getSignedUrl(file, callback) {
     fetch("/api/presigned_url", {
       method: "POST",
@@ -76,12 +82,14 @@ class App extends Component {
       });
   }
 
+  // on submit, validate form and call uploadFile, which will get the signed
+  //   url from the API and then upload to S3.
   handleSubmit(e) {
     e.preventDefault();
     if (this.validateForm()) {
-      // post info to API, get back signed URL, upload to URL
       this.s3Uploader.uploadFile();
     } else {
+      // TODO: Better UX for user error.
       alert("Please provide a UUID and an image.");
     }
   }
