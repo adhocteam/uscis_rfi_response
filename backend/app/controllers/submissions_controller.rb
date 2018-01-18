@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SubmissionsController < ApplicationController
   def index
     @submissions = Submission.all
