@@ -16,7 +16,7 @@ The solution should include a working CI/CD Pipeline in AWS using Docker contain
 
 1. Use `.env.sample` to create a `.env` file with your AWS credentials.
 2. Run `docker-compose build` to build the containers with dependencies
-3. Run `docker-compose backend db:create db:migrate`
+3. Run `docker-compose backend rake db:create db:migrate`
 4. Run `docker-compose up` to start the application.  The frontend should be served at http://localhost:3000.
 
 # Troubleshooting
