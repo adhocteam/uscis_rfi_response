@@ -10,9 +10,14 @@ usage() {
   exit 1
 }
 
-if [ -z "$ENV" ] || [ -z "$VERSION" ]
+if [ -z "$ENV" ]
 then
   usage
+fi
+
+if [ -z "$VERSION" ]
+then
+  VERSION=$(git rev-parse --short=12 HEAD)
 fi
 
 pushd terraform/$ENV/backend
