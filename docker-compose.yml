@@ -15,9 +15,10 @@ services:
       - ./.env
   frontend:
     build: frontend
-    command: npm start
+    command: yarn start
     volumes:
       - ./frontend/:/app
+      - /app/node_modules
     ports:
       - "3000:3000"
     depends_on:
