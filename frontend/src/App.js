@@ -10,6 +10,7 @@ class App extends Component {
       uuid: "",
       image_base64: null,
       image_name: null,
+      image_type: null,
       timestamp: null
     };
 
@@ -35,6 +36,7 @@ class App extends Component {
       this.setState(p => ({
         image_base64: reader.result,
         image_name: file.name,
+        image_type: file.type,
         timestamp: new Date().toISOString()
       }));
     };
