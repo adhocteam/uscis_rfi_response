@@ -15,7 +15,7 @@ RSpec.describe ApiController, type: :request do
         {
           "user_id": "e3ca6d96454e4a508a677e9e6c3dc3e3",
           "image_name": "my cat.jpg",
-          "timestamp": "2018-01-16T17:00:03-05:00"
+          "image_type": "image/png"
         }
       POST
       expect(response).to have_http_status(:success)
