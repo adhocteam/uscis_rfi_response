@@ -143,7 +143,7 @@ data "template_file" "task_definition" {
 
   # TODO(rnagle): add the ability to specify a command
   vars {
-    image_url      = "${var.ecr_img_url}:${var.service_version}"
+    image_url      = "${var.ecr_img_url}:${var.env}-${var.service_version}"
     container_name = "${var.container_name}"
     container_port = "${var.container_port}"
   }

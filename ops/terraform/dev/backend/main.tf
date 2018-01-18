@@ -25,6 +25,8 @@ data "aws_ecr_repository" "uscis_backend" {
 module "uscis_backend" {
   source = "../../modules/app"
 
+  env = "dev"
+
   # TODO(rnagle): lock this down
   admin_cidr_ingress = "0.0.0.0/0"
 
@@ -68,7 +70,7 @@ resource "aws_s3_bucket_policy" "uscis_backend_config_vars" {
               "Effect": "Deny",
               "Principal": "*",
               "Action": "s3:PutObject",
-              "Resource": "${aws_s3_bucket.uscis_backend_config_vars.arn}/*",
+              "Resource": "arn:aws:s3:::uscis-backend-config-vars/*",
               "Condition": {
                       "StringNotEquals": {
                              "s3:x-amz-server-side-encryption": "aws:kms"
@@ -80,7 +82,7 @@ resource "aws_s3_bucket_policy" "uscis_backend_config_vars" {
               "Effect": "Deny",
               "Principal": "*",
               "Action": "s3:PutObject",
-              "Resource": "${aws_s3_bucket.uscis_backend_config_vars.arn}/*",
+              "Resource": "arn:aws:s3:::uscis-backend-config-vars/*",
               "Condition": {
                       "Null": {
                              "s3:x-amz-server-side-encryption": true

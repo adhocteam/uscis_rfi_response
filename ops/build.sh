@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -eu
 
 if [[ -f tmp/pids/server.pid ]]
 then
@@ -8,8 +8,24 @@ then
   exit 1
 fi
 
-cd ../backend
+pushd ../backend
 
-TAG=${1:-latest}
+ENV=${1}
+TAG=${2:-latest}
 
-docker build -t uscis-backend:$TAG .
+# Produce a Dockerfile.$ENV file with env vars embedded
+vars=$'\n'"# Environment variables"$'\n'
+for v in $(cat ../ops/config/$ENV/env);
+do
+  vars="${vars}ENV $v"$'\n'
+done
+
+echo "$(cat Dockerfile)"$'\n'"$vars" > Dockerfile.$ENV
+
+# Build an image for the specified env
+docker build -f Dockerfile.$ENV -t uscis-backend:$ENV-$TAG .
+
+# Clean up
+rm Dockerfile.$ENV
+
+popd
