@@ -1,8 +1,8 @@
-import React, { Component } from "react";
+import React from "react";
 import ReactS3Uploader from "react-s3-uploader";
-import "./App.css";
+import UscisApiService from "../services/UscisApiService";
 
-class App extends Component {
+class UploadPage extends React.Component {
   constructor(props) {
     super(props);
 
@@ -61,28 +61,14 @@ class App extends Component {
   }
 
   // custom function for ReactS3Uploader
-  // TODO: error handling
   getSignedUrl(file, callback) {
-    fetch("/api/presigned_url", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        user_id: this.state.uuid,
-        image_name: this.state.image_name,
-        image_type: this.state.image_type
-      })
-    })
-      .then(resp => {
-        if (resp.status === 200) {
-          return resp.json();
-        }
-      })
-      .then(json => {
-        callback(json);
-      });
+    UscisApiService.getSignedUrl(
+      this.state.uuid,
+      this.state.image_name,
+      this.state.image_type
+    ).then(json => {
+      callback(json);
+    });
   }
 
   // on submit, validate form and call uploadFile, which will get the signed
@@ -134,4 +120,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default UploadPage;
