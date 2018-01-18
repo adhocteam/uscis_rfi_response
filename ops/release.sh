@@ -6,8 +6,7 @@ VERSION=${1}
 
 if [ -z "$VERSION" ]
 then
-  echo "Must specify a version"
-  exit 1
+  VERSION=$(git rev-parse --short=12 HEAD)
 fi
 
 ./build.sh $VERSION
