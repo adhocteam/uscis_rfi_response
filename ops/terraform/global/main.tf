@@ -1,23 +1,55 @@
-# Create the resources used to track terraform state.
-# These are not tracked in terraform state and so
-# only a single `terraform apply`
 provider "aws" {
   region = "us-east-1"
 }
 
-resource "aws_s3_bucket" "state_bucket" {
-  bucket = "uscis-tf-state"
+# For env variable and secret storage
+resource "aws_s3_bucket" "uscis_backend_config_vars" {
+  bucket = "uscis-backend-config-vars"
   acl    = "private"
 }
 
-resource "aws_dynamodb_table" "state_table" {
-  name           = "uscis-tf-table"
-  read_capacity  = 5
-  write_capacity = 5
-  hash_key       = "LockID"
+resource "aws_kms_key" "uscis_backend_config_vars" {
+  description             = "USCIS Backend configuration variables and secrets"
+  deletion_window_in_days = 7
+}
 
-  attribute {
-    name = "LockID"
-    type = "S"
-  }
+resource "aws_kms_alias" "uscis_backend_config_vars" {
+  name          = "alias/uscis_backend"
+  target_key_id = "${aws_kms_key.uscis_backend_config_vars.key_id}"
+}
+
+resource "aws_s3_bucket_policy" "uscis_backend_config_vars" {
+  bucket = "${aws_s3_bucket.uscis_backend_config_vars.id}"
+  policy =<<POLICY
+{
+   "Version": "2012-10-17",
+   "Id": "PutObjPolicy",
+   "Statement": [
+         {
+              "Sid": "DenyIncorrectEncryptionHeader",
+              "Effect": "Deny",
+              "Principal": "*",
+              "Action": "s3:PutObject",
+              "Resource": "arn:aws:s3:::uscis-backend-config-vars/*",
+              "Condition": {
+                      "StringNotEquals": {
+                             "s3:x-amz-server-side-encryption": "aws:kms"
+                       }
+              }
+         },
+         {
+              "Sid": "DenyUnEncryptedObjectUploads",
+              "Effect": "Deny",
+              "Principal": "*",
+              "Action": "s3:PutObject",
+              "Resource": "arn:aws:s3:::uscis-backend-config-vars/*",
+              "Condition": {
+                      "Null": {
+                             "s3:x-amz-server-side-encryption": true
+                      }
+             }
+         }
+   ]
+}
+POLICY
 }
