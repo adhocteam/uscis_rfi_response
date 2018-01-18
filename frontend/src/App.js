@@ -71,7 +71,8 @@ class App extends Component {
       },
       body: JSON.stringify({
         user_id: this.state.uuid,
-        image_name: this.state.image_name
+        image_name: this.state.image_name,
+        image_type: this.state.image_type
       })
     })
       .then(resp => {
@@ -132,6 +133,8 @@ class App extends Component {
         {this.state.image_base64}
         <h3> filename </h3>
         {this.state.image_name}
+        <h3> content-type </h3>
+        {this.state.image_type}
       </div>
     );
   }
