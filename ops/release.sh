@@ -2,12 +2,23 @@
 
 set -e
 
-VERSION=${1}
+ENV=$1
+VERSION=$2
+
+usage() {
+  echo "./release.sh ENV VERSION"
+  exit 1
+}
+
+if [ -z "$ENV" ]
+then
+  usage
+fi
 
 if [ -z "$VERSION" ]
 then
   VERSION=$(git rev-parse --short=12 HEAD)
 fi
 
-./build.sh $VERSION
-./push.sh $VERSION
+./build.sh $ENV $VERSION
+./push.sh $ENV $VERSION

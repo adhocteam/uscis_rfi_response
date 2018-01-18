@@ -1,3 +1,7 @@
+variable "env" {
+  description = "The deployment environment (e.g., dev, test, prod)"
+}
+
 variable "vpc_id" {
   description = "The ID of the VPC where the app will be deployed"
 }

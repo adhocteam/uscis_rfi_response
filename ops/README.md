@@ -2,7 +2,7 @@ Build docker image for backend app:
 
 ```
 cd ops
-./build.sh <version>
+./build.sh <env> <version>
 ```
 
 This produces the image: `uscis-backend:latest`
@@ -13,14 +13,14 @@ To push to the Elastic Container Registry:
 
 ```
 cd ops
-./push.sh <version>
+./push.sh <env> <version>
 ```
 
 Convenience for running `./build.sh` and `./push.sh`:
 
 ```
 cd ops
-./release.sh <version>
+./release.sh <env> <version>
 ```
 
 Convenience for deploying a new image to ECS:
@@ -31,4 +31,3 @@ cd ops
 ```
 
 The only possible value for <env> is `dev` at the moment.
-
