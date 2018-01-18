@@ -22,7 +22,7 @@ RSpec.describe ApiController, type: :request do
       url = 'https://uscis-rfds.s3.us-stubbed-1.amazonaws.com/e3ca6d96454e4a508a677e9e6c3dc3e3-my%20cat.jpg'
       body = JSON.parse(response.body)
       expect(body['status']).to eq 'ok'
-      expect(body['url']).to match url
+      expect(body['signedUrl']).to match url
     end
   end
 end
