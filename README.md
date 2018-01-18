@@ -18,7 +18,3 @@ The solution should include a working CI/CD Pipeline in AWS using Docker contain
 2. Run `docker-compose build` to build the containers with dependencies
 3. Run `docker-compose backend rake db:create db:migrate`
 4. Run `docker-compose up` to start the application.  The frontend should be served at http://localhost:3000.
-
-# Troubleshooting
-
-* If the backend fails to start with `A server is already running. Check /myapp/tmp/pids/server.pid.`, but there is no other server running, just delete `backend/tmp/pids/server.pid`. For reasons that are unclear to me at the moment, sometimes rails fails to clear out the pidfile on shutdown under docker-compose.
