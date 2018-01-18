@@ -128,10 +128,6 @@ class App extends Component {
 
         <h3> image preview: </h3>
         <img src="" height="200" alt="Preview of what will be uploaded." />
-        <h3> b64 bytes </h3>
-        {this.state.image_base64}
-        <h3> filename </h3>
-        {this.state.image_name}
       </div>
     );
   }
