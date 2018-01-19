@@ -1,6 +1,5 @@
 import React from "react";
-import { Auth } from "./App";
-import validToken from "../services/AuthService";
+import AuthService from "../services/Auth";
 class Login extends React.Component {
   state = {
     redirectToReferrer: false,
@@ -10,12 +9,9 @@ class Login extends React.Component {
   login = e => {
     e.preventDefault();
     sessionStorage.setItem("token", "fhq412p89fqfp48h");
-    this.setState(() => ({
-      redirectToReferrer: true
-    }));
   };
   render() {
-    if (validToken()) {
+    if (AuthService.validToken()) {
       this.props.history.push("/private");
     }
 

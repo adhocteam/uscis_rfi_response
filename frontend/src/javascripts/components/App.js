@@ -12,7 +12,7 @@ export default function App() {
       <Switch>
         <Route path="/" exact component={UploadPage} />
         <Route path="/login" exact component={Login} />
-        <PrivateRoute path="/private" exact component={Protected} />
+        <PrivateRoute path="/admin" exact component={Protected} />
         <Redirect to="/" />
       </Switch>
     </BrowserRouter>

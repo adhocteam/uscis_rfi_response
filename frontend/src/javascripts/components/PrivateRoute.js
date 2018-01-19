@@ -1,12 +1,12 @@
 import { Route, Redirect } from "react-router-dom";
 import React from "react";
-import validToken from "../services/AuthService";
+import AuthService from "../services/Auth";
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
     render={props =>
-      validToken() ? (
+      AuthService.validToken() ? (
         <Component {...props} />
       ) : (
         <Redirect
