@@ -5,7 +5,6 @@ require 'rails_helper'
 RSpec.describe SubmissionsController, type: :request do
   before(:each) do
     user = User.create!(
-      :uuid => 'abcd1234',
       :name => Faker::Name.name,
       :email => Faker::Internet.email,
       :street1 => Faker::Address.street_address,
@@ -17,13 +16,16 @@ RSpec.describe SubmissionsController, type: :request do
       :role => :user
     )
 
-    Submission.create!(
-      :user_uuid => user.uuid,
+    submission = Submission.new(
       :timestamp => Faker::Time.between(DateTime.now - 1, DateTime.now),
       :uri => Faker::Internet.url,
       :status => :submitted,
       :notes => Faker::Lorem.sentence
     )
+
+    submission.user = user
+
+    submission.save
   end
 
   describe 'get #index' do
@@ -33,13 +35,13 @@ RSpec.describe SubmissionsController, type: :request do
       expect(response.content_type).to eq('application/json')
       body = JSON.parse(response.body)
       submission = Submission.first
-      expect(body[0]).to include(
-        "user_uuid" => submission.user_uuid,
+      expect(body[0]).to match(hash_including({
+        "user_id" => submission.user_id,
         "timestamp" => submission.timestamp,
         "uri" => submission.uri,
         "status" => submission.status,
         "notes" => submission.notes
-      )
+      }))
     end
   end
 
@@ -50,13 +52,13 @@ RSpec.describe SubmissionsController, type: :request do
       expect(response.content_type).to eq('application/json')
       body = JSON.parse(response.body)
       submission = Submission.first
-      expect(body).to include(
-        "user_uuid" => submission.user_uuid,
+      expect(body).to match(hash_including({
         "timestamp" => submission.timestamp,
         "uri" => submission.uri,
         "status" => submission.status,
-        "notes" => submission.notes
-      )
+        "notes" => submission.notes,
+        "user" => hash_including({ "id" => submission.user_id })
+      }))
     end
   end
 end
