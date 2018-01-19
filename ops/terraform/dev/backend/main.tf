@@ -43,3 +43,51 @@ module "uscis_backend" {
   service_version = "${var.service_version}"
   task_count      = 1
 }
+
+resource "aws_db_subnet_group" "backend" {
+  name_prefix = "tf-uscis-backend-"
+  subnet_ids  = ["${data.aws_subnet_ids.uscis_subnet_ids.ids}"]
+
+  tags {
+    Name = "uscis-backend-db-subnet-group"
+  }
+}
+
+resource "aws_security_group" "db_sg" {
+  description = "controls direct access to application rds instances"
+  vpc_id      = "${data.aws_vpc.uscis_vpc.id}"
+  name        = "ecs-uscis-backend-db-sg"
+
+  ingress {
+    protocol  = "tcp"
+    from_port = 5432
+    to_port   = 5432
+
+    security_groups = [
+      "${module.uscis_backend.instance_security_group}"
+    ]
+  }
+
+  tags {
+    Name = "ecs-uscis-backend-db-sg"
+  }
+}
+
+resource "aws_db_instance" "backend" {
+  identifier_prefix      = "tf-uscis-backend-"
+  allocated_storage      = 10
+  storage_type           = "gp2"
+  engine                 = "postgres"
+  engine_version         = "9.6.5"
+  instance_class         = "db.t2.micro"
+  name                   = "uscis_backend"
+  username               = "uscis"
+  password               = "${var.db_password}"
+  db_subnet_group_name   = "${aws_db_subnet_group.backend.name}"
+  vpc_security_group_ids = ["${aws_security_group.db_sg.id}"]
+  skip_final_snapshot    = true
+
+  tags {
+    Name = "uscis-backend-db"
+  }
+}
