@@ -20,15 +20,6 @@
         - src: files/nginx.conf
           dest: /etc/nginx/nginx.conf
           mode: "0644"
-        - src: files/nginx-selfsigned.key
-          dest: /etc/ssl/self-signed.key
-          mode: "0600"
-        - src: files/nginx-selfsigned.crt
-          dest: /etc/ssl/certs/self-signed.crt
-          mode: "0600"
-        - src: files/dhparam.pem
-          dest: /etc/ssl/certs/dhparam.pem
-          mode: "0600"
 
     - name: install docker-py
       pip:
