@@ -125,6 +125,14 @@ resource "aws_iam_role_policy" "uscis_jenkins_policy" {
       ],
       "Effect": "Allow",
       "Resource": "arn:aws:kms:us-east-1:968246069280:key/176febca-5a61-4a48-9bb9-79cc4e6d8216"
+    },
+    {
+      "Sid": "Stmt1516368584838",
+      "Action": [
+        "ecr:GetAuthorizationToken"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
     }
   ]
 }
