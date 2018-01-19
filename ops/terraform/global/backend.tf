@@ -4,6 +4,7 @@ terraform {
     key            = "global/terraform.tfstate"
     region         = "us-east-1"
     dynamodb_table = "uscis-tf-table"
+
     # TODO(rnagle): encrypt with KMS
     #encrypt        = "1"
     #kms_key_id     = ""

@@ -8,7 +8,7 @@ variable "vpc_id" {
 
 variable "subnet_ids" {
   description = "Subnets where resources will be located"
-  type = "list"
+  type        = "list"
 }
 
 variable "ecr_img_url" {
