@@ -27,7 +27,7 @@ resource "aws_launch_configuration" "app" {
   ]
 
   key_name             = "${var.key_name}"
-  image_id             = "ami-28456852" # ECS optimized AWS Linux
+  image_id             = "ami-28456852"                         # ECS optimized AWS Linux
   instance_type        = "${var.instance_type}"
   iam_instance_profile = "${aws_iam_instance_profile.app.name}"
 
