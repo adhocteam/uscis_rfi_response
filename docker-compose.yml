@@ -4,6 +4,8 @@ services:
     image: postgres
   backend:
     build: backend
+    # https://stackoverflow.com/a/38732187/42559
+    entrypoint: /myapp/entrypoint.sh
     command: bundle exec rails s -p 3001 -b '0.0.0.0'
     volumes:
       - ./backend/:/myapp
