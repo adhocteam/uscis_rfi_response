@@ -1,0 +1,161 @@
+---
+- hosts: all
+  user: ec2-user
+  become: true
+  tasks:
+    - name: install packages
+      yum:
+        pkg: "{{ item }}"
+        state: present
+      with_items:
+        - nginx
+        - docker
+
+    - name: install nginx files
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        mode: "{{ item.mode }}"
+      with_items:
+        - src: files/nginx.conf
+          dest: /etc/nginx/nginx.conf
+          mode: "0644"
+        - src: files/nginx-selfsigned.key
+          dest: /etc/ssl/self-signed.key
+          mode: "0600"
+        - src: files/nginx-selfsigned.crt
+          dest: /etc/ssl/certs/self-signed.crt
+          mode: "0600"
+        - src: files/dhparam.pem
+          dest: /etc/ssl/certs/dhparam.pem
+          mode: "0600"
+
+    - name: install docker-py
+      pip:
+        name: docker-py
+        state: present
+
+    - name: ensure docker config directory
+      file:
+        state: directory
+        path: /etc/docker
+        mode: 0755
+        owner: root
+        group: docker
+
+    - name: sync docker daemon config
+      copy:
+        src: files/daemon.json
+        dest: /etc/docker/daemon.json
+        mode: 0644
+        owner: root
+        group: docker
+
+    - name: ensure docker is running and configured to start at boot
+      service:
+        name: docker
+        enabled: yes
+        state: started
+
+    - name: schedule docker to prune unused objects
+      cron:
+        name: "docker prune"
+        job:  "docker system prune --force"
+        special_time: "weekly"
+
+    - name: allow the ec2-user to talk to the docker daemon
+      user:
+        name: ec2-user
+        append: yes
+        groups: docker
+
+    - name: see if volume has been configured
+      shell: pvdisplay /dev/xvdh
+      register: vol_check
+
+    - name: configure docker volume
+      shell: |
+        pvcreate /dev/xvdh
+        vgcreate docker /dev/xvdh
+        lvcreate --wipesignatures y -n thinpool docker -l 95%VG
+        lvcreate --wipesignatures y -n thinpoolmeta docker -l 1%VG
+
+        sudo lvconvert -y \
+          --zero n \
+          -c 512K \
+          --thinpool docker/thinpool \
+          --poolmetadata docker/thinpoolmeta
+      when: vol_check|failed
+
+    - name: copy thinpool configuration
+      copy:
+        src: files/docker-thinpool.profile
+        dest: /etc/lvm/profile/docker-thinpool.profile
+        mode: 0644
+        owner: root
+        group: root
+      when: vol_check|failed
+
+    - name: apply the lvm profile, enable monitoring
+      shell: |
+        lvchange --metadataprofile docker-thinpool docker/thinpool
+        lvs -o+seg_monitor
+      when: vol_check|failed
+
+    - name: pull official Jenkins LTS image
+      command: docker pull jenkins/jenkins:lts-alpine
+
+    - name: create filesystem on ebs volume for persistent jenkins data
+      filesystem:
+        fstype: ext4
+        dev: /dev/xvdg
+        force: no # do not overwrite existing FS
+
+    - name: create mount point
+      file:
+        path: /mnt/jenkins/
+        state: directory
+        mode: 0755
+        owner: 1000
+        recurse: yes
+
+    - name: mount the docker home ebs volume
+      mount:
+        src: /dev/xvdg
+        path: /mnt/jenkins
+        state: mounted
+        fstype: ext4
+
+    - name: copy dockerfile
+      copy:
+        src: files/Dockerfile
+        dest: /home/ec2-user/Dockerfile
+
+    - name: build customized jenkins image
+      shell: docker build -t uscis_jenkins .
+      args:
+        chdir: /home/ec2-user
+
+    - name: make sure jenkins user can access docker.sock
+      file:
+        path: /var/run/docker.sock
+        owner: 1000
+
+    - name: start the jenkins container
+      docker_container:
+        name: jenkins
+        image: uscis_jenkins
+        state: started
+        ports:
+          - "8080:8080"
+        volumes:
+          - "/mnt/jenkins:/var/jenkins_home"
+          - "/var/run/docker.sock:/var/run/docker.sock"
+        restart_policy: on-failure
+        restart_retries: 10
+        restart: yes
+
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
