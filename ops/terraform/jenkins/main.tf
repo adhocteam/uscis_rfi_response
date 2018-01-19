@@ -5,7 +5,7 @@ provider "aws" {
 data "aws_caller_identity" "current" {}
 
 module "uscis_shared_vpc" {
-  source = "../modules/vpc"
+  source   = "../modules/vpc"
   vpc_name = "uscis-shared-vpc"
   az_count = 1
 }
@@ -48,10 +48,10 @@ resource "aws_security_group" "ssh" {
   }
 
   egress {
-    from_port       = 0
-    to_port         = 0
-    protocol        = "-1"
-    cidr_blocks     = ["0.0.0.0/0"]
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
@@ -76,7 +76,7 @@ resource "aws_security_group" "http" {
 }
 
 resource "aws_iam_instance_profile" "uscis_jenkins_profile" {
-  name  = "tf-uscis-jenkins-profile"
+  name = "tf-uscis-jenkins-profile"
   role = "${aws_iam_role.uscis_jenkins_role.name}"
 }
 
@@ -110,9 +110,9 @@ data "template_file" "uscis_jenkins_policy" {
 }
 
 resource "aws_iam_role_policy" "uscis_jenkins_policy" {
-    name   = "tf-uscis-jenkins-policy"
-    role   = "${aws_iam_role.uscis_jenkins_role.id}"
-    policy = "${data.template_file.uscis_jenkins_policy.rendered}"
+  name   = "tf-uscis-jenkins-policy"
+  role   = "${aws_iam_role.uscis_jenkins_role.id}"
+  policy = "${data.template_file.uscis_jenkins_policy.rendered}"
 }
 
 resource "aws_instance" "jenkins" {
@@ -136,10 +136,10 @@ resource "aws_instance" "jenkins" {
 
 resource "aws_ebs_volume" "docker_home" {
   availability_zone = "${aws_instance.jenkins.availability_zone}"
-  type       = "gp2"
-  size       = 100
-  encrypted  = true
-  kms_key_id = "arn:aws:kms:us-east-1:${data.aws_caller_identity.current.account_id}:key/${data.aws_kms_alias.uscis_backend.target_key_id}"
+  type              = "gp2"
+  size              = 100
+  encrypted         = true
+  kms_key_id        = "arn:aws:kms:us-east-1:${data.aws_caller_identity.current.account_id}:key/${data.aws_kms_alias.uscis_backend.target_key_id}"
 
   tags {
     Name = "uscis-docker-home"
@@ -154,10 +154,10 @@ resource "aws_volume_attachment" "ebs_one" {
 
 resource "aws_ebs_volume" "jenkins_home" {
   availability_zone = "${aws_instance.jenkins.availability_zone}"
-  type       = "gp2"
-  size       = 100
-  encrypted  = true
-  kms_key_id = "arn:aws:kms:us-east-1:${data.aws_caller_identity.current.account_id}:key/${data.aws_kms_alias.uscis_backend.target_key_id}"
+  type              = "gp2"
+  size              = 100
+  encrypted         = true
+  kms_key_id        = "arn:aws:kms:us-east-1:${data.aws_caller_identity.current.account_id}:key/${data.aws_kms_alias.uscis_backend.target_key_id}"
 
   tags {
     Name = "uscis-jenkins-home"
