@@ -21,34 +21,13 @@ resource "aws_autoscaling_group" "app" {
   }
 }
 
-data "aws_ami" "ecs_ami" {
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["*-ecs-optimized"]
-  }
-
-  filter {
-    name   = "architecture"
-    values = ["x86_64"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  owners = ["amazon"]
-}
-
 resource "aws_launch_configuration" "app" {
   security_groups = [
     "${aws_security_group.instance_sg.id}",
   ]
 
   key_name             = "${var.key_name}"
-  image_id             = "${data.aws_ami.ecs_ami.id}"
+  image_id             = "ami-28456852" # ECS optimized AWS Linux
   instance_type        = "${var.instance_type}"
   iam_instance_profile = "${aws_iam_instance_profile.app.name}"
 
@@ -158,7 +137,7 @@ resource "aws_ecs_service" "main" {
   name            = "tf-ecs-${var.container_name}"
   cluster         = "${aws_ecs_cluster.main.id}"
   task_definition = "${aws_ecs_task_definition.app_task_def.arn}"
-  desired_count   = 1
+  desired_count   = "${var.task_count}"
   iam_role        = "${aws_iam_role.ecs_service.name}"
 
   health_check_grace_period_seconds  = 60
@@ -169,6 +148,11 @@ resource "aws_ecs_service" "main" {
     target_group_arn = "${aws_alb_target_group.main.id}"
     container_name   = "${var.container_name}"
     container_port   = "${var.container_port}"
+  }
+
+  placement_strategy {
+    type  = "spread"
+    field = "instanceId"
   }
 
   depends_on = [
