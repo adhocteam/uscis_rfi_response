@@ -37,6 +37,23 @@ cd ops/playbooks
 ansible-playbook -i "<public_ip_address>," jenkins.yml
 ```
 
+## Custom Jenkins Docker Image
+
+Extra utilities and dependencies can be added to the Jenkins image so that they may be used in Jenkins jobs.
+
+Add new requirements to: `/ops/playbooks/files/Dockerfile`
+
+Note that the Jenkins image we're using `jenkins:lts-alpine`. You'll need to use `apk add ...` to install new packages or add to/modify `/etc/apk/repositories` to source packages that are not available by default.
+
+Further note that installing package requires the `root` user in the alpine image. So, make sure any additions to the Dockerfile happen in between `USER root` and the switch back to `USER jenkins`.
+
+Example -- installing the aws cli tools:
+
+```
+RUN apk add --no-cache py-pip && \
+    pip install awscli
+```
+
 # Build and deploy scripts
 
 Build docker image for backend app:
