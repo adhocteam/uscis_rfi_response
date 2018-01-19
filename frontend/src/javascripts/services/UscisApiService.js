@@ -1,4 +1,19 @@
 const UscisApiService = {
+  login: function(email, password) {
+    return fetch("/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password
+      })
+    }).then(resp => {
+        return resp.json();
+    });
+  },
   // TODO: error handling
   getSignedUrl: function(user_id, image_name, image_type) {
     return fetch("/api/presigned_url", {
