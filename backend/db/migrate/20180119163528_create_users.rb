@@ -1,8 +1,6 @@
 class CreateUsers < ActiveRecord::Migration[5.1]
   def change
-    create_table :users do |t|
-      t.string :name
-      t.string :email
+    change_table :users do |t|
       t.string :street1
       t.string :street2
       t.string :city
@@ -10,8 +8,6 @@ class CreateUsers < ActiveRecord::Migration[5.1]
       t.string :zip
       t.date :dob
       t.integer :role
-
-      t.timestamps
     end
   end
 end
