@@ -1,0 +1,94 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Stmt1516321578874",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Effect": "Allow",
+      "Resource": "arn:aws:s3:::uscis-backend-config-vars/*"
+    },
+    {
+      "Sid": "Stmt1516321578694",
+      "Action": [
+        "s3:ListBucket"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:s3:::uscis-tf-state"
+      ]
+    },
+    {
+      "Sid": "Stmt1516321578684",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:s3:::uscis-tf-state/*"
+      ]
+    },
+    {
+      "Sid": "Stmt1516371381094",
+      "Action": [
+        "dynamodb:GetItem",
+        "dynamodb:PutItem",
+        "dynamodb:DeleteItem"
+      ],
+      "Effect": "Allow",
+      "Resource": "arn:aws:dynamodb:us-east-1:${account_id}:table/uscis-tf-table"
+    },
+    {
+      "Sid": "Stmt1516321651522",
+      "Action": [
+        "kms:Decrypt",
+        "kms:Encrypt"
+      ],
+      "Effect": "Allow",
+      "Resource": "arn:aws:kms:us-east-1:${account_id}:key/176febca-5a61-4a48-9bb9-79cc4e6d8216"
+    },
+    {
+      "Sid": "Stmt1516368584838",
+      "Action": [
+        "ecr:GetAuthorizationToken"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    },
+    {
+      "Sid": "Stmt1516368581138",
+      "Action": [
+        "iam:GetRole",
+        "iam:GetRolePolicy"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:iam::${account_id}:role/tf-ecs-uscis-backend-instance-role",
+        "arn:aws:iam::${account_id}:role/tf-uscis-backend-ecs-role"
+      ]
+    },
+    {
+      "Sid": "Stmt1516368541138",
+      "Action": [
+        "iam:GetInstanceProfile"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:iam::${account_id}:instance-profile/tf-ecs-instprofile"
+      ]
+    },
+    {
+      "Sid": "Stmt1516372084017",
+      "Action": [
+        "ec2:*",
+        "ecs:*",
+        "elasticloadbalancing:*",
+        "autoscaling:*"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    }
+  ]
+}

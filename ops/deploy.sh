@@ -21,5 +21,5 @@ then
 fi
 
 pushd terraform/$ENV/backend
-terraform init && terraform apply -var service_version=$VERSION
+terraform init && terraform apply -auto-approve -var service_version=$VERSION
 popd

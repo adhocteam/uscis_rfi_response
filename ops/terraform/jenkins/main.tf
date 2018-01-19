@@ -101,42 +101,18 @@ resource "aws_iam_role" "uscis_jenkins_role" {
 EOF
 }
 
+data "template_file" "uscis_jenkins_policy" {
+  template = "${file("${path.module}/templates/jenkins.json")}"
+
+  vars {
+    account_id = "${data.aws_caller_identity.current.account_id}"
+  }
+}
+
 resource "aws_iam_role_policy" "uscis_jenkins_policy" {
     name   = "tf-uscis-jenkins-policy"
     role   = "${aws_iam_role.uscis_jenkins_role.id}"
-
-    policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "Stmt1516321578874",
-      "Action": [
-        "s3:GetObject",
-        "s3:HeadObject"
-      ],
-      "Effect": "Allow",
-      "Resource": "arn:aws:s3:::uscis-backend-config-vars/*"
-    },
-    {
-      "Sid": "Stmt1516321651522",
-      "Action": [
-        "kms:Decrypt"
-      ],
-      "Effect": "Allow",
-      "Resource": "arn:aws:kms:us-east-1:968246069280:key/176febca-5a61-4a48-9bb9-79cc4e6d8216"
-    },
-    {
-      "Sid": "Stmt1516368584838",
-      "Action": [
-        "ecr:GetAuthorizationToken"
-      ],
-      "Effect": "Allow",
-      "Resource": "*"
-    }
-  ]
-}
-EOF
+    policy = "${data.template_file.uscis_jenkins_policy.rendered}"
 }
 
 resource "aws_instance" "jenkins" {
