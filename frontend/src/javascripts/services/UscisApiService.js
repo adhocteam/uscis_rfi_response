@@ -28,13 +28,13 @@ const UscisApiService = {
       },
       body: JSON.stringify({
         name: name,
+        dob: dob,
         email: email,
         street1: street1,
-        street2: street2,
+        street2: street2 || "",
         city: city,
         state: state,
-        zip: zip,
-        user_id: "4132j34l1jhl1"
+        zip: zip
       })
     }).then(resp => {
       if (resp.status === 200) {

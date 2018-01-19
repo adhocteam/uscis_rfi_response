@@ -19,18 +19,35 @@ class ApiController < ApplicationController
 
   # creates a user and sends them an email
   def request_upload
+    # insert record
+    # TODO: ensure you can't double insert the same email
+    email = params.fetch('email')
+    dob = params.fetch('dob')
+    name = params.fetch('name')
+    street1 = params.fetch('street1')
+    street2= params.fetch('street2')
+    city = params.fetch('city')
+    state= params.fetch('state')
+    zip= params.fetch('zip')
+    user_id = SecureRandom.uuid
+    # create user
+    User.create(uuid: user_id, name: name, 
+      email: email, street1: street1, 
+      street2: street2, city: city, state: state, zip:zip, 
+      dob: dob, role: 1)
+    domain = ENV.fetch("DOMAIN")
+    source = ENV.fetch("EMAIL_SOURCE")
+    subject = "Admin has requsted you to upload a photo."
+    body = "Admin has requsted you upload a photo: #{domain}?id=#{user_id}"
+
     begin
+      # send email to user
       ses = Aws::SES::Client.new
-      email = params.fetch('email')
-      user_id = params.fetch('user_id')
-      # add EMAIL_SOURCE to .env 
-      source = ENV.fetch("EMAIL_SOURCE")
-      subject = "Admin has requested you to upload a photo."
-      body = "Admin has requsted you upload a photo: http://localhost:3000?id=#{user_id}"
+
       ses.send_email({
         source: source,
         destination:{
-          to_addresses: [source]
+          to_addresses: [email]
         },
         message: {
           subject: {
