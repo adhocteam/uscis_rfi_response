@@ -1,18 +1,24 @@
 import React from "react";
 import AuthService from "../services/Auth";
+import UscisApiService from "../services/UscisApiService";
+
 class Login extends React.Component {
   state = {
-    redirectToReferrer: false,
-    username: "",
-    password: ""
+    redirectToReferrer: false
   };
   login = e => {
     e.preventDefault();
-    sessionStorage.setItem("token", "fhq412p89fqfp48h");
+    UscisApiService.login(this.state.email, this.state.password).then(resp => {
+      // valid response has status code of 200 and puts user info
+      // in data field
+      if (resp.data) {
+        this.props.history.push("/admin");
+      }
+    });
   };
   render() {
     if (AuthService.validToken()) {
-      this.props.history.push("/private");
+      this.props.history.push("/admin");
     }
 
     return (
@@ -22,11 +28,11 @@ class Login extends React.Component {
         <p>You must log in to view the page</p>
         <form onSubmit={this.login}>
           <label>
-            Username
+            Email
             <input
               type="text"
-              value={this.state.username}
-              onChange={e => this.setState({ username: e.target.value })}
+              value={this.state.email}
+              onChange={e => this.setState({ email: e.target.value })}
             />
           </label>
           <br />

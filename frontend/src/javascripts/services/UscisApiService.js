@@ -1,6 +1,8 @@
 const UscisApiService = {
+  // logs a user in, persisting session token and expiration to
+  // session storage
   login: function(email, password) {
-    return fetch("/api/login", {
+    return fetch("/auth/sign_in", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -10,9 +12,20 @@ const UscisApiService = {
         email: email,
         password: password
       })
-    }).then(resp => {
-        return resp.json();
-    });
+    })
+      .then(resp => {
+        if (resp.status === 200) {
+          sessionStorage.setItem("token", resp.headers.get("access-token"));
+          // expiry appears to be returned in seconds, javascript is milliseconds
+          sessionStorage.setItem("expiry", 1000 * resp.headers.get("expiry"));
+          return resp.json();
+        } else {
+          return {};
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      });
   },
   // TODO: error handling
   getSignedUrl: function(user_id, image_name, image_type) {
