@@ -4,7 +4,8 @@ import UploadPage from "./UploadPage";
 import Login from "./Login";
 import PrivateRoute from "./PrivateRoute";
 
-const Protected = () => <h3>Protected</h3>;
+// fake admin page to illustrate routing
+const Admin = () => <h3>Welcome to the admin page!</h3>;
 
 export default function App() {
   return (
@@ -12,7 +13,7 @@ export default function App() {
       <Switch>
         <Route path="/" exact component={UploadPage} />
         <Route path="/login" exact component={Login} />
-        <PrivateRoute path="/admin" exact component={Protected} />
+        <PrivateRoute path="/admin" exact component={Admin} />
         <Redirect to="/" />
       </Switch>
     </BrowserRouter>
