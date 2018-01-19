@@ -75,6 +75,62 @@ resource "aws_security_group" "http" {
   }
 }
 
+resource "aws_iam_instance_profile" "uscis_jenkins_profile" {
+  name  = "tf-uscis-jenkins-profile"
+  role = "${aws_iam_role.uscis_jenkins_role.name}"
+}
+
+resource "aws_iam_role" "uscis_jenkins_role" {
+  name = "tf-uscis-jenkins-role"
+  path = "/"
+
+  assume_role_policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": "sts:AssumeRole",
+            "Principal": {
+               "Service": "ec2.amazonaws.com"
+            },
+            "Effect": "Allow",
+            "Sid": ""
+        }
+    ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "uscis_jenkins_policy" {
+    name   = "tf-uscis-jenkins-policy"
+    role   = "${aws_iam_role.uscis_jenkins_role.id}"
+
+    policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Stmt1516321578874",
+      "Action": [
+        "s3:GetObject",
+        "s3:HeadObject"
+      ],
+      "Effect": "Allow",
+      "Resource": "arn:aws:s3:::uscis-backend-config-vars/*"
+    },
+    {
+      "Sid": "Stmt1516321651522",
+      "Action": [
+        "kms:Decrypt"
+      ],
+      "Effect": "Allow",
+      "Resource": "arn:aws:kms:us-east-1:968246069280:key/176febca-5a61-4a48-9bb9-79cc4e6d8216"
+    }
+  ]
+}
+EOF
+}
+
 resource "aws_instance" "jenkins" {
   ami                         = "${data.aws_ami.aws_linux.id}"
   instance_type               = "t2.small"
@@ -82,8 +138,7 @@ resource "aws_instance" "jenkins" {
   vpc_security_group_ids      = ["${aws_security_group.ssh.id}", "${aws_security_group.http.id}"]
   subnet_id                   = "${element(module.uscis_shared_vpc.subnets_ids, 0)}"
   associate_public_ip_address = true
-  # TODO(rnagle): create a jenkins profile
-  #iam_instance_profile        = "uscis-jenkins"
+  iam_instance_profile        = "tf-uscis-jenkins-profile"
 
   root_block_device {
     volume_type = "standard"

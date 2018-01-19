@@ -132,9 +132,14 @@
         dest: /home/ec2-user/Dockerfile
 
     - name: build customized jenkins image
-      docker_image:
-        name: uscis_jenkins
-        path: /home/ec2-user
+      shell: docker build -t uscis_jenkins .
+      args:
+        chdir: /home/ec2-user
+
+    - name: make sure jenkins user can access docker.sock
+      file:
+        path: /var/run/docker.sock
+        owner: 1000
 
     - name: start the jenkins container
       docker_container:
@@ -146,7 +151,6 @@
         volumes:
           - "/mnt/jenkins:/var/jenkins_home"
           - "/var/run/docker.sock:/var/run/docker.sock"
-          - "/usr/bin/docker:/usr/bin/docker"
         restart_policy: on-failure
         restart_retries: 10
 
