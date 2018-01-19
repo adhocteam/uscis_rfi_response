@@ -4,5 +4,5 @@ variable "aws_region" {
 }
 
 variable "service_version" {
-  default     = "latest"
+  default = "latest"
 }

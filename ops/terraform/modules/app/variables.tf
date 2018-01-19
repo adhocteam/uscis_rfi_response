@@ -8,7 +8,7 @@ variable "vpc_id" {
 
 variable "subnet_ids" {
   description = "Subnets where resources will be located"
-  type = "list"
+  type        = "list"
 }
 
 variable "ecr_img_url" {
@@ -57,4 +57,9 @@ variable "asg_max" {
 variable "asg_desired" {
   description = "Desired numbers of servers in ASG"
   default     = "1"
+}
+
+variable "task_count" {
+  description = "Desired number ECS tasks to run"
+  default     = 2
 }
