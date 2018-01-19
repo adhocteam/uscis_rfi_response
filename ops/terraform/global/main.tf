@@ -20,7 +20,8 @@ resource "aws_kms_alias" "uscis_backend_config_vars" {
 
 resource "aws_s3_bucket_policy" "uscis_backend_config_vars" {
   bucket = "${aws_s3_bucket.uscis_backend_config_vars.id}"
-  policy =<<POLICY
+
+  policy = <<POLICY
 {
    "Version": "2012-10-17",
    "Id": "PutObjPolicy",

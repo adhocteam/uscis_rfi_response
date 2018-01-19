@@ -10,6 +10,7 @@ data "aws_vpc" "uscis_vpc" {
 
 data "aws_subnet_ids" "uscis_subnet_ids" {
   vpc_id = "${data.aws_vpc.uscis_vpc.id}"
+
   tags {
     Name = "ecs-uscis-vpc"
   }
@@ -31,13 +32,14 @@ module "uscis_backend" {
   admin_cidr_ingress = "0.0.0.0/0"
 
   # TODO(rnagle): allow setting a different key
-  key_name           = "ecs"
+  key_name = "ecs"
 
-  container_name     = "uscis-backend"
-  ecr_img_url        = "${data.aws_ecr_repository.uscis_backend.repository_url}"
+  container_name = "uscis-backend"
+  ecr_img_url    = "${data.aws_ecr_repository.uscis_backend.repository_url}"
 
-  vpc_id = "${data.aws_vpc.uscis_vpc.id}"
+  vpc_id     = "${data.aws_vpc.uscis_vpc.id}"
   subnet_ids = ["${data.aws_subnet_ids.uscis_subnet_ids.ids}"]
 
-  service_version    = "${var.service_version}"
+  service_version = "${var.service_version}"
+  task_count      = 1
 }
