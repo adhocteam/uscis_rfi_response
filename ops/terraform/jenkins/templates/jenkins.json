@@ -85,7 +85,8 @@
         "ec2:*",
         "ecs:*",
         "elasticloadbalancing:*",
-        "autoscaling:*"
+        "autoscaling:*",
+        "rds:*"
       ],
       "Effect": "Allow",
       "Resource": "*"
