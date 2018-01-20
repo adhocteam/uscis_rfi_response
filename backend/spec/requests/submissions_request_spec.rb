@@ -3,23 +3,28 @@
 require 'rails_helper'
 
 RSpec.describe SubmissionsController, type: :request do
+  let(:auth_headers) do
+    admin = Admin.create!(email: 'admin@adhocteam.us', password: 'password')
+    admin.create_new_auth_token
+  end
+
   before(:each) do
     customer = Customer.create!(
-      :name => Faker::Name.name,
-      :email => Faker::Internet.email,
-      :street1 => Faker::Address.street_address,
-      :street2 => Faker::Address.secondary_address,
-      :city => Faker::Address.city,
-      :state => Faker::Address.state,
-      :zip => Faker::Address.zip,
-      :dob => Faker::Date.between(18.years.ago, 80.years.ago)
+      name: Faker::Name.name,
+      email: Faker::Internet.email,
+      street1: Faker::Address.street_address,
+      street2: Faker::Address.secondary_address,
+      city: Faker::Address.city,
+      state: Faker::Address.state,
+      zip: Faker::Address.zip,
+      dob: Faker::Date.between(18.years.ago, 80.years.ago)
     )
 
     submission = Submission.new(
-      :timestamp => Faker::Time.between(DateTime.now - 1, DateTime.now),
-      :uri => Faker::Internet.url,
-      :status => :submitted,
-      :notes => Faker::Lorem.sentence
+      timestamp: Faker::Time.between(DateTime.now - 1, DateTime.now),
+      uri: Faker::Internet.url,
+      status: :submitted,
+      notes: Faker::Lorem.sentence
     )
 
     submission.customer = customer
@@ -29,7 +34,7 @@ RSpec.describe SubmissionsController, type: :request do
 
   describe 'get #index' do
     it 'returns http success' do
-      get submissions_path
+      get submissions_path, headers: auth_headers
       expect(response).to have_http_status(:success)
       expect(response.content_type).to eq('application/json')
       body = JSON.parse(response.body)
@@ -46,11 +51,10 @@ RSpec.describe SubmissionsController, type: :request do
 
   describe 'get #show' do
     it 'returns http success' do
-      get submission_path(Submission.first.id)
+      get submission_path(Submission.first.id), headers: auth_headers
       expect(response).to have_http_status(:success)
       expect(response.content_type).to eq('application/json')
       body = JSON.parse(response.body)
-      puts body
       submission = Submission.first
       expect(body).to match(hash_including({
         "timestamp" => submission.timestamp,
