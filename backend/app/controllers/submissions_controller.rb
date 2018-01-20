@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SubmissionsController < ApplicationController
-  before_action :authenticate_user!, except: [:presigned_url, :create]
+  before_action :authenticate_admin!, except: [:presigned_url, :create]
 
   def index
     @submissions = Submission.all
@@ -9,7 +9,7 @@ class SubmissionsController < ApplicationController
   end
 
   def show
-    @submission = Submission.find(params[:id])
+    @submission = Submission.find(params.fetch(:id))
     render json: @submission, include: :customer
   end
 
