@@ -40,11 +40,11 @@ RSpec.describe SubmissionsController, type: :request do
       body = JSON.parse(response.body)
       submission = Submission.first
       expect(body[0]).to match(hash_including({
-        "customer_id" => submission.customer_id,
-        "timestamp" => submission.timestamp,
-        "uri" => submission.uri,
-        "status" => submission.status,
-        "notes" => submission.notes
+        'customer_id' => submission.customer_id,
+        'timestamp' => submission.timestamp,
+        'uri' => submission.uri,
+        'status' => submission.status,
+        'notes' => submission.notes
       }))
     end
   end
@@ -57,12 +57,41 @@ RSpec.describe SubmissionsController, type: :request do
       body = JSON.parse(response.body)
       submission = Submission.first
       expect(body).to match(hash_including({
-        "timestamp" => submission.timestamp,
-        "uri" => submission.uri,
-        "status" => submission.status,
-        "notes" => submission.notes,
-        "customer" => hash_including({ "id" => submission.customer_id })
+        'timestamp' => submission.timestamp,
+        'uri' => submission.uri,
+        'status' => submission.status,
+        'notes' => submission.notes,
+        'customer' => hash_including({ 'id' => submission.customer_id })
       }))
+    end
+  end
+
+  describe 'post #create' do
+    it 'returns http success' do
+      customer = Customer.first
+      params = { email: customer.email }
+      post submissions_path, params: params, headers: auth_headers
+      expect(response).to have_http_status(:created)
+      body = JSON.parse(response.body)
+      expect(body['status']).to eq('requested')
+    end
+  end
+
+  describe 'put #approve' do
+    it 'returns http success' do
+      put "/submissions/#{Submission.first.id}/approve", headers: auth_headers
+      expect(response).to have_http_status(:success)
+      body = JSON.parse(response.body)
+      expect(body['status']).to eq('approved')
+    end
+  end
+
+  describe 'put #deny' do
+    it 'returns http success' do
+      put "/submissions/#{Submission.first.id}/deny", headers: auth_headers
+      expect(response).to have_http_status(:success)
+      body = JSON.parse(response.body)
+      expect(body['status']).to eq('denied')
     end
   end
 end

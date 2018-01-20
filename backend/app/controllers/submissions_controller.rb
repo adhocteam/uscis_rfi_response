@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SubmissionsController < ApplicationController
-  before_action :authenticate_admin!, except: [:presigned_url, :create]
+  before_action :authenticate_admin!, except: [:presigned_url]
 
   def index
     @submissions = Submission.all
@@ -14,9 +14,24 @@ class SubmissionsController < ApplicationController
   end
 
   def create
+    @customer = Customer.find_by(email: params.fetch(:email))
+    @submission = @customer.submissions.create
+    render json: @submission, status: :created
   end
 
   def update
+  end
+
+  def approve
+    @submission = Submission.find(params.fetch(:id))
+    @submission.update(status: :approved)
+    render json: @submission
+  end
+
+  def deny
+    @submission = Submission.find(params.fetch(:id))
+    @submission.update(status: :denied)
+    render json: @submission
   end
 
   def presigned_url
