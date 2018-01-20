@@ -708,8 +708,8 @@ PLATFORMS
 DEPENDENCIES
   aws-sdk
   byebug
-  faker
   devise_token_auth
+  faker
   listen (>= 3.0.5, < 3.2)
   pg (~> 0.18)
   puma (~> 3.7)
