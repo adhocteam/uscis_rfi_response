@@ -1,8 +1,9 @@
-$font-path: " ../fonts";
-$image-path: "../images";
+$font-path: "~@cmsgov/design-system-core/fonts";
+$image-path: "~@cmsgov/design-system-core/images";
 
-@import "@cmsgov/design-system-core/src/index";
-@import "@cmsgov/design-system-layout/src/index";
+@import "~@cmsgov/design-system-core/src/index";
+@import "~@cmsgov/design-system-layout/src/index";
+
 
 body {
   margin: 0;

@@ -17,7 +17,7 @@ services:
       - ./.env
   frontend:
     build: frontend
-    command: yarn start
+    command: yarn server
     volumes:
       - ./frontend/:/app
       - /app/node_modules

@@ -108,7 +108,9 @@ class UploadPage extends React.Component {
             }}
             onChange={this.readFile}
           />
-          <Button type="submit">Submit</Button>
+          <Button type="submit" variation="primary">
+            Submit
+          </Button>
         </form>
 
         <h3>Image Preview:</h3>

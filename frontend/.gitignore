@@ -2,9 +2,6 @@
 
 # dependencies
 /node_modules
-src/stylesheets/*.css
-src/images
-src/fonts
 
 # testing
 /coverage
