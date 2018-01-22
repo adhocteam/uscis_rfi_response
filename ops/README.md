@@ -24,7 +24,7 @@ This will create an ECR to store docker images for the application.
 
 ```
 cd ops
-./release.sh
+./release.sh <env> <version:-latest>
 ```
 
 4. Apply the backend application configurations:
@@ -61,7 +61,7 @@ ssh -i /path/to/key.pem ec2-user@<ip-of-ec2-instance>
 
 4. Run the following command:
 
-``
+```
 docker run --rm \
     -it --name uscis-db-setup\
     <elastic-container-registry-url>/<repo/image-name>:<version-tag> \
