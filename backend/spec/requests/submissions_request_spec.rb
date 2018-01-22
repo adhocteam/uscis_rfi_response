@@ -96,6 +96,7 @@ RSpec.describe SubmissionsController, type: :request do
       expect(body['status']).to eq('denied')
     end
   end
+
   describe 'post #presigned_url' do
     it 'returns http success' do
       headers = { 'CONTENT_TYPE' => 'application/json' }
