@@ -64,9 +64,11 @@ ssh -i /path/to/key.pem ec2-user@<ip-of-ec2-instance>
 ```
 docker run --rm \
     -it --name uscis-db-setup\
-    <elastic-container-registry-url>/<repo/image-name>:<version-tag> \
+    <aws-account-id>.dkr.ecr.<aws-region>.amazonaws.com/<repo-or-image-name>:<version-tag> \
     bundle exec rake db:drop db:create db:migrate`
 ```
+
+Be sure to fill in the appropriate values for `<aws-account-id>`, `<aws-region>`, `<repo-or-image-name>` and `<version-tag>`.
 
 ### Build and deploy scripts
 
