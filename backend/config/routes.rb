@@ -8,4 +8,5 @@ Rails.application.routes.draw do
   put 'submissions/:id/deny', to: 'submissions#deny'
   put 'submissions/:id/notes', to: 'submissions#notes'
   resources :submissions, only: [:index, :show, :create]
+  resource :admin, only: [:show]
 end
