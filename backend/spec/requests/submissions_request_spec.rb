@@ -21,7 +21,7 @@ RSpec.describe SubmissionsController, type: :request do
     )
 
     submission = Submission.new(
-      timestamp: Faker::Time.between(DateTime.now - 1, DateTime.now),
+      timestamp: Faker::Time.between(Time.current - 1.day, Time.current),
       uri: Faker::Internet.url,
       status: :submitted,
       notes: Faker::Lorem.sentence
@@ -39,13 +39,13 @@ RSpec.describe SubmissionsController, type: :request do
       expect(response.content_type).to eq('application/json')
       body = JSON.parse(response.body)
       submission = Submission.first
-      expect(body[0]).to match(hash_including({
-        'customer_id' => submission.customer_id,
-        'timestamp' => submission.timestamp,
-        'uri' => submission.uri,
-        'status' => submission.status,
-        'notes' => submission.notes
-      }))
+      expect(body[0]).to match(
+        hash_including('customer_id' => submission.customer_id,
+                       'timestamp' => submission.timestamp,
+                       'uri' => submission.uri,
+                       'status' => submission.status,
+                       'notes' => submission.notes)
+      )
     end
   end
 
@@ -56,13 +56,15 @@ RSpec.describe SubmissionsController, type: :request do
       expect(response.content_type).to eq('application/json')
       body = JSON.parse(response.body)
       submission = Submission.first
-      expect(body).to match(hash_including({
-        'timestamp' => submission.timestamp,
-        'uri' => submission.uri,
-        'status' => submission.status,
-        'notes' => submission.notes,
-        'customer' => hash_including({ 'id' => submission.customer_id })
-      }))
+      expect(body).to match(
+        hash_including(
+          'timestamp' => submission.timestamp,
+          'uri' => submission.uri,
+          'status' => submission.status,
+          'notes' => submission.notes,
+          'customer' => hash_including('id' => submission.customer_id)
+        )
+      )
     end
   end
 
@@ -95,4 +97,3 @@ RSpec.describe SubmissionsController, type: :request do
     end
   end
 end
-
