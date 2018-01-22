@@ -1,7 +1,7 @@
 const UscisApiService = {
   // TODO: error handling
   getSignedUrl: function(user_id, image_name, image_type) {
-    return fetch("/api/presigned_url", {
+    return fetch("/submissions/presigned_url", {
       method: "POST",
       headers: {
         Accept: "application/json",
