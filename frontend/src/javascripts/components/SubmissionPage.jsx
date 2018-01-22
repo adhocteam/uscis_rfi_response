@@ -3,14 +3,7 @@ import React from "react";
 import UscisApiService from "../services/UscisApiService";
 
 class SubmissionPage extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      submission: {
-        uri: "http://via.placeholder.com/350x150",
-      }
-    };
-  }
+  state = {};
 
   componentDidMount() {
     const { params: { id } } = this.props.match;
@@ -22,8 +15,7 @@ class SubmissionPage extends React.Component {
 
   renderSubmission = () => {
     const { submission } = this.state;
-
-    return (
+    return submission ? (
       <section>
         <img alt={`UUID: ${submission.id}`} src={submission.uri} />
         <div>
@@ -36,12 +28,14 @@ class SubmissionPage extends React.Component {
           </div>
         </div>
       </section>
-    );
+    ) : <p>No submission found!</p>;
   };
 
   renderCustomer = () => {
-    const { customer } = this.state.submission;
+    const { submission } = this.state;
+    if (!submission) { return null; }
 
+    const { customer } = submission;
     return customer ? (
       <section>
         <div>Name: {customer.name}</div>
