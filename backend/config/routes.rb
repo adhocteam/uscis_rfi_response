@@ -6,5 +6,6 @@ Rails.application.routes.draw do
   post 'submissions/presigned_url', to: 'submissions#presigned_url'
   put 'submissions/:id/approve', to: 'submissions#approve'
   put 'submissions/:id/deny', to: 'submissions#deny'
-  resources :submissions, only: [:index, :show, :create, :update]
+  put 'submissions/:id/notes', to: 'submissions#notes'
+  resources :submissions, only: [:index, :show, :create]
 end

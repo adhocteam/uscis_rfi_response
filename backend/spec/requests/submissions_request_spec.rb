@@ -80,20 +80,24 @@ RSpec.describe SubmissionsController, type: :request do
   end
 
   describe 'put #approve' do
-    it 'returns http success' do
+    it 'returns http success when approving' do
       put "/submissions/#{Submission.first.id}/approve", headers: auth_headers
       expect(response).to have_http_status(:success)
-      body = JSON.parse(response.body)
-      expect(body['status']).to eq('approved')
     end
   end
 
   describe 'put #deny' do
-    it 'returns http success' do
+    it 'returns http success when denying' do
       put "/submissions/#{Submission.first.id}/deny", headers: auth_headers
       expect(response).to have_http_status(:success)
-      body = JSON.parse(response.body)
-      expect(body['status']).to eq('denied')
+    end
+  end
+
+  describe 'put #notes' do
+    it 'returns http success when editing notes' do
+      params = { notes: 'foobar' }
+      put "/submissions/#{Submission.first.id}/notes", params: params, headers: auth_headers
+      expect(response).to have_http_status(:success)
     end
   end
 
