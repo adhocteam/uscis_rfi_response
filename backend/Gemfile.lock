@@ -708,6 +708,7 @@ PLATFORMS
 DEPENDENCIES
   aws-sdk
   byebug
+  devise_token_auth
   faker
   devise_token_auth
   listen (>= 3.0.5, < 3.2)

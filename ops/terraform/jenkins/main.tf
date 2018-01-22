@@ -53,6 +53,10 @@ resource "aws_security_group" "ssh" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags {
+    Name = "uscis jenkins ssh"
+  }
 }
 
 resource "aws_security_group" "http" {
@@ -64,14 +68,11 @@ resource "aws_security_group" "http" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    security_groups = ["${aws_security_group.elb.id}"]
   }
 
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+  tags {
+    Name = "uscis jenkins http"
   }
 }
 
@@ -168,4 +169,71 @@ resource "aws_volume_attachment" "ebs_two" {
   device_name = "/dev/sdg"
   volume_id   = "${aws_ebs_volume.jenkins_home.id}"
   instance_id = "${aws_instance.jenkins.id}"
+}
+
+resource "aws_security_group" "elb" {
+  name        = "uscis jenkins elb inbound"
+  description = "Allow HTTP connections"
+  vpc_id      = "${module.uscis_shared_vpc.vpc_id}"
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags {
+    Name = "uscis jenkins elb"
+  }
+}
+
+resource "aws_elb" "elb" {
+  name            = "tf-uscis-jenkins-elb"
+  security_groups = ["${aws_security_group.elb.id}"]
+  subnets         = ["${element(module.uscis_shared_vpc.subnets_ids, 0)}"]
+
+  listener {
+    instance_port     = 80
+    instance_protocol = "http"
+    lb_port           = 80
+    lb_protocol       = "http"
+  }
+
+  listener {
+    instance_port      = 80
+    instance_protocol  = "http"
+    lb_port            = 443
+    lb_protocol        = "https"
+    ssl_certificate_id = "${var.ssl_cert_id}"
+  }
+
+  health_check {
+    healthy_threshold   = 2
+    unhealthy_threshold = 5
+    timeout             = 5
+    interval            = 10
+    target              = "HTTP:80/login"
+  }
+
+  instances    = ["${aws_instance.jenkins.id}"]
+  idle_timeout = 300
+
+  tags {
+    Name = "uscis-jenkins-elb"
+  }
 }
