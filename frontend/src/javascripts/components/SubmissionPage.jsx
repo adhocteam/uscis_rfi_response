@@ -16,9 +16,8 @@ class SubmissionPage extends React.Component {
     const { params: { id } } = this.props.match;
     UscisApiService
       .getSubmission(id)
-      .then(submission => {
-        this.setState({ submission });
-      });
+      .then(submission => this.setState({ submission }))
+      .catch(err => { console.error(err); });
   }
 
   renderSubmission = () => {

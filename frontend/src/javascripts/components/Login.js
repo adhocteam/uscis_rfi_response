@@ -5,7 +5,12 @@ import UscisApiService from "../services/UscisApiService";
 class Login extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { admin: null };
+    this.state = {
+      admin: null,
+      loggedIn: false,
+      email: '',
+      password: ''
+    };
   }
 
   componentDidMount() {
@@ -15,21 +20,16 @@ class Login extends React.Component {
   getAdmin = () => {
     UscisApiService
       .getAdmin()
-      .then(data => {
-        const admin = {
-          uid: data.uid,
-          name: data.name,
-          email: data.email
-        };
-        this.setState({ admin });
-      });
+      .then(admin => { this.setState({ admin, loggedIn: true }); })
+      .catch(err => { console.error(err); });
   };
 
   login = e => {
     e.preventDefault();
     UscisApiService
       .login(this.state.email, this.state.password)
-      .then(this.getAdmin());
+      .then(this.getAdmin)
+      .catch(err => { console.error(err); });
   };
 
   handleEmailChange = e => this.setState({ email: e.target.value });
@@ -65,7 +65,7 @@ class Login extends React.Component {
   );
 
   render() {
-    return this.state.admin ? this.props.children : this.renderLogin();
+    return this.state.loggedIn ? this.props.children : this.renderLogin();
   }
 }
 export default Login;

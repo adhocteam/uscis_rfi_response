@@ -15,9 +15,7 @@ const UscisApiService = {
       } else {
         throw new Error("Failed to get admin.");
       }
-    }).catch(err => {
-      console.error(err);
-    });
+    })
   },
 
   login: (email, password) => {
@@ -42,8 +40,6 @@ const UscisApiService = {
       } else {
         throw new Error("Failed to log in.");
       }
-    }).catch(err => {
-      console.error(err);
     });
   },
 
@@ -74,8 +70,6 @@ const UscisApiService = {
       } else {
         throw new Error(`Failed to get submission ${id}`);
       }
-    }).catch(err => {
-      console.error(err);
     });
   }
 };
