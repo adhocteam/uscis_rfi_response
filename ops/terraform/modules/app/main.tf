@@ -246,10 +246,11 @@ resource "aws_iam_role_policy" "instance" {
 ## ALB
 
 resource "aws_alb_target_group" "main" {
-  name     = "tf-ecs-${var.container_name}"
-  port     = 80
-  protocol = "HTTP"
-  vpc_id   = "${var.vpc_id}"
+  name                 = "tf-ecs-${var.container_name}"
+  port                 = 80
+  protocol             = "HTTP"
+  vpc_id               = "${var.vpc_id}"
+  deregistration_delay = 60
 
   tags {
     Name = "ecs-${var.container_name}"
