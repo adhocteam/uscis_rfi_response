@@ -30,10 +30,12 @@ pipeline {
 
     stage('Build and deploy') {
       steps {
-        sh """
-          cd ops/scripts
-          ./frontend-deploy.sh ${params.BUCKET}
-        """
+        nodejs('node-9-4-0') {
+          sh """
+            cd ops/scripts
+            ./frontend-deploy.sh ${params.BUCKET}
+          """
+        }
       }
     }
   }
