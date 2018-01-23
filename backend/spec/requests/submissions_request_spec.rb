@@ -51,16 +51,9 @@ RSpec.describe SubmissionsController, type: :request do
       end
     end
 
-    describe 'put #approve' do
+    describe 'put #update' do
       it '401s' do
-        put "/submissions/#{Submission.first.id}/approve"
-        expect(response).to have_http_status(401)
-      end
-    end
-
-    describe 'put #deny' do
-      it '401s' do
-        put "/submissions/#{Submission.first.id}/deny"
+        put "/submissions/#{Submission.first.id}"
         expect(response).to have_http_status(401)
       end
     end
@@ -139,26 +132,45 @@ RSpec.describe SubmissionsController, type: :request do
       end
     end
 
-    describe 'put #approve' do
+    describe 'put #update' do
+      let(:submission) { Submission.first }
+
       it 'returns http success when approving' do
-        put "/submissions/#{Submission.first.id}/approve", headers: auth_headers
+        params = { status: 'approved' }
+        put "/submissions/#{submission.id}", params: params, headers: auth_headers
         expect(response).to have_http_status(:success)
-
+        body = JSON.parse(response.body)
+        expect(body['status']).to eq('approved')
+        expect(body['notes']).to eq(submission.notes)
       end
-    end
 
-    describe 'put #deny' do
       it 'returns http success when denying' do
-        put "/submissions/#{Submission.first.id}/deny", headers: auth_headers
+        params = { status: 'denied' }
+        put "/submissions/#{submission.id}", params: params, headers: auth_headers
         expect(response).to have_http_status(:success)
+        body = JSON.parse(response.body)
+        expect(body['status']).to eq('denied')
+        expect(body['notes']).to eq(submission.notes)
       end
-    end
 
-    describe 'put #notes' do
-      it 'returns http success when editing notes' do
-        params = { notes: 'foobar' }
-        put "/submissions/#{Submission.first.id}/notes", params: params, headers: auth_headers
+      it 'returns http success when updating notes' do
+        params = { notes: 'foo bar' }
+        put "/submissions/#{submission.id}", params: params, headers: auth_headers
         expect(response).to have_http_status(:success)
+        body = JSON.parse(response.body)
+        expect(body['status']).to eq(submission.status)
+        expect(body['notes']).to eq('foo bar')
+      end
+
+      it 'only updates strong params' do
+        params = { status: 'approved', notes: 'foo bar', uri: 'baz quux' }
+        put "/submissions/#{submission.id}", params: params, headers: auth_headers
+        expect(response).to have_http_status(:success)
+        body = JSON.parse(response.body)
+        expect(body['status']).to eq('approved')
+        expect(body['notes']).to eq('foo bar')
+        expect(body['uri']).to eq(submission.uri)
+      end
     end
   end
 end

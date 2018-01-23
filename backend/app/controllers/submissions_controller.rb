@@ -15,28 +15,15 @@ class SubmissionsController < ApplicationController
 
   def create
     customer = Customer.find_by(email: params.fetch(:email))
-    submission = customer.submissions.create
+    submission = customer.submissions.create!
     render json: submission, status: :created
   end
 
-  def approve
+  def update
     submission = Submission.find(params.fetch(:id))
-    submission.update(status: :approved)
-    head :ok
+    submission.update!(review_params)
+    render json: submission
   end
-
-  def deny
-    submission = Submission.find(params.fetch(:id))
-    submission.update(status: :denied)
-    head :ok
-  end
-
-  def notes
-    submission = Submission.find(params.fetch(:id))
-    submission.update(notes: params.fetch(:notes))
-    head :ok
-  end
-
 
   def presigned_url
     begin
@@ -51,5 +38,11 @@ class SubmissionsController < ApplicationController
       render json: { 'status': e.to_s }, status: :unauthorized && return
     end
     render json: { 'status': 'ok', 'signedUrl': url }
+  end
+
+  private
+
+  def review_params
+    params.permit(:status, :notes)
   end
 end
