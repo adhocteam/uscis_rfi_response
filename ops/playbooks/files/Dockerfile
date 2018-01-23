@@ -11,6 +11,6 @@ RUN wget -O /tmp/terraform.zip https://releases.hashicorp.com/terraform/0.11.2/t
     unzip -o -d /tmp /tmp/terraform.zip && \
     mv /tmp/terraform /usr/bin/terraform
 RUN pip install docker-compose
-RUN apk add nodejs nodejs-npm
+RUN apk add nodejs nodejs-npm yarn
 
 USER jenkins
