@@ -40,9 +40,9 @@ class SubmissionsController < ApplicationController
     render json: { 'status': 'ok', 'signedUrl': url }
   end
 
-  def status
-    filter=params.fetch('filter')
-    submissions = Submission.where(status: filter)
+  def filter
+    status = params.fetch('status')
+    submissions = Submission.where(status: status)
     render json: submissions
   end
 
