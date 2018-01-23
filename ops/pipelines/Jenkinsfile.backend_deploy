@@ -1,0 +1,63 @@
+pipeline {
+  agent any
+
+  parameters {
+    string(
+      defaultValue: "",
+      description: 'The version tag of the docker image to deploy. Required.',
+      name: 'VERSION'
+    )
+    string(
+      name: 'DB_PASS',
+      defaultValue: 'backend-dev-db-pass',
+      description: 'Credential ID for backend dev db'
+    )
+    string(
+      name: 'BRANCH',
+      defaultValue: '*/master',
+      description: 'The branch used to run the deploy.'
+    )
+  }
+
+  environment {
+    DB_PASS = credentials("${params.DB_PASS}")
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout([
+          $class: 'GitSCM',
+          branches: [[name: "${params.BRANCH}" ]],
+          extensions: [[
+            $class: 'WipeWorkspace'
+          ]],
+          userRemoteConfigs: [[
+            credentialsId: '21eadf90-b536-4fa5-a9de-fb6a8be070ab',
+            url: 'git@github.com:adhocteam/uscis_rfi_response.git'
+          ]]
+        ])
+      }
+    }
+
+    stage('Ensure VERSION') {
+      steps {
+        sh """
+        if [ -z "$VERSION" ]
+        then
+          exit 1
+        fi
+        """
+      }
+    }
+
+    stage('Deploy') {
+      steps {
+        sh """
+          cd ops/scripts
+          ./backend-deploy.sh dev ${params.VERSION} true
+        """
+      }
+    }
+  }
+}
