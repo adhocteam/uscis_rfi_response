@@ -1,15 +1,19 @@
 import React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { Router, Route, Switch } from "react-router-dom";
+
+import history from "../history";
 import AdminPage from "./AdminPage";
+import LoginPage from "./LoginPage";
 import UploadPage from "./UploadPage";
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <Router history={history}>
       <Switch>
-        <Route path="/" exact component={UploadPage} />
+        <Route path="/login" exact component={LoginPage} />
         <Route path="/review" component={AdminPage} />
+        <Route path="/" exact component={UploadPage} />
       </Switch>
-    </BrowserRouter>
+    </Router>
   );
 }
