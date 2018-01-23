@@ -1,11 +1,14 @@
 import React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { Router, Route, Switch } from "react-router-dom";
+
+import history from "../history";
 import AdminPage from "./AdminPage";
+import LoginPage from "./LoginPage";
 import UploadPage from "./UploadPage";
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <Router history={history}>
       <div>
         <div className="ds-u-fill--primary-darkest">
           <div className="ds-l-container ds-u-md-padding-top--1">
@@ -22,10 +25,11 @@ export default function App() {
           </div>
         </div>
         <Switch>
-          <Route path="/" exact component={UploadPage} />
+          <Route path="/login" exact component={LoginPage} />
           <Route path="/review" component={AdminPage} />
+          <Route path="/" exact component={UploadPage} />
         </Switch>
       </div>
-    </BrowserRouter>
+    </Router>
   );
 }
