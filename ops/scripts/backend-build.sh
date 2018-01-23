@@ -12,11 +12,11 @@ ENV=${1}
 TAG=${2:-latest}
 
 # Pull config vars from s3 before build
-pushd config
+pushd ../config
 ./fetch.sh $ENV
 popd
 
-pushd ../backend
+pushd ../../backend
 
 # Produce a Dockerfile.$ENV file with env vars embedded
 vars=$'\n'"# Environment variables"$'\n'

@@ -24,7 +24,7 @@ This will create an ECR to store docker images for the application.
 
 ```
 cd ops
-./release.sh <env> <version:-latest>
+./backend-release.sh <env> <version:-latest>
 ```
 
 4. Apply the backend application configurations:
@@ -75,8 +75,8 @@ Be sure to fill in the appropriate values for `<aws-account-id>`, `<aws-region>`
 Build docker image for backend app:
 
 ```
-cd ops
-./build.sh <env> <version>
+cd ops/scripts
+./backend-build.sh <env> <version>
 ```
 
 This produces the image: `uscis-backend:<env>-<version>`
@@ -86,21 +86,21 @@ If no <version> is supplied, the current git commit is used.
 To push to the Elastic Container Registry:
 
 ```
-cd ops
-./push.sh <env> <version>
+cd ops/scripts
+./backend-push.sh <env> <version>
 ```
 
-Convenience for running `./build.sh` and `./push.sh`:
+Convenience for running `./backend-build.sh` and `./backend-push.sh`:
 
 ```
-cd ops
-./release.sh <env> <version>
+cd ops/scripts
+./backend-release.sh <env> <version>
 ```
 
 Convenience for deploying a new image to ECS:
 
 ```
-cd ops
+cd ops/scripts
 ./deploy.sh <env> <version>
 ```
 

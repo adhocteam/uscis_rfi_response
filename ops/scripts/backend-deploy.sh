@@ -7,7 +7,7 @@ VERSION=$2
 FORCE=$3
 
 usage() {
-  echo "./deploy.sh ENV VERSION"
+  echo "./backend-deploy.sh ENV VERSION"
   exit 1
 }
 
@@ -26,6 +26,6 @@ then
   FORCE="-auto-approve"
 fi
 
-pushd terraform/$ENV/backend
+pushd ../terraform/$ENV/backend
 terraform init && terraform apply -var service_version=$VERSION $FORCE
 popd
