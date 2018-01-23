@@ -20,7 +20,7 @@ pipeline {
       steps {
         checkout([
           $class: 'GitSCM',
-          branches: [[name: params.VERSION]],
+          branches: [[name: "*/master"]],
           extensions: [[
             $class: 'WipeWorkspace'
           ]],
@@ -29,6 +29,24 @@ pipeline {
             url: 'git@github.com:adhocteam/uscis_rfi_response.git'
           ]]
         ])
+      }
+    }
+
+    stage('Conditional checkout of version/tag') {
+      steps{
+        checkout([
+          $class: 'GitSCM',
+          branches: [[name: "${params.VERSION}"]],
+          userRemoteConfigs: [[
+            credentialsId: '21eadf90-b536-4fa5-a9de-fb6a8be070ab',
+            url: 'git@github.com:adhocteam/uscis_rfi_response.git'
+          ]]
+        ])
+      }
+      when {
+        expression {
+          params.VERSION != ""
+        }
       }
     }
 
