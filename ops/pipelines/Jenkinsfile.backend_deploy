@@ -4,13 +4,18 @@ pipeline {
   parameters {
     string(
       defaultValue: "",
-      description: 'The commit hash or tag to deploy. Required.',
+      description: 'The version tag of the docker image to deploy. Required.',
       name: 'VERSION'
     )
     string(
       name: 'DB_PASS',
       defaultValue: 'backend-dev-db-pass',
       description: 'Credential ID for backend dev db'
+    )
+    string(
+      name: 'BRANCH',
+      defaultValue: '*/master',
+      description: 'The branch used to run the deploy.'
     )
     // Can only deploy to "dev" for now
     //string(
@@ -29,7 +34,10 @@ pipeline {
       steps {
         checkout([
           $class: 'GitSCM',
-          branches: [[name: params.VERSION]],
+          branches: [[name: "${params.BRANCH}" ]],
+          extensions: [[
+            $class: 'WipeWorkspace'
+          ]],
           userRemoteConfigs: [[
             credentialsId: '21eadf90-b536-4fa5-a9de-fb6a8be070ab',
             url: 'git@github.com:adhocteam/uscis_rfi_response.git'

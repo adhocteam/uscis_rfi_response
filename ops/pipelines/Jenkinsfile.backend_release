@@ -21,6 +21,9 @@ pipeline {
         checkout([
           $class: 'GitSCM',
           branches: [[name: params.VERSION]],
+          extensions: [[
+            $class: 'WipeWorkspace'
+          ]],
           userRemoteConfigs: [[
             credentialsId: '21eadf90-b536-4fa5-a9de-fb6a8be070ab',
             url: 'git@github.com:adhocteam/uscis_rfi_response.git'
