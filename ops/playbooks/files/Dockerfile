@@ -1,6 +1,7 @@
 FROM jenkins/jenkins:lts-alpine
 USER root
 
+RUN apk update
 RUN apk add --no-cache py-pip
 RUN pip install awscli
 RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories && \
@@ -10,5 +11,6 @@ RUN wget -O /tmp/terraform.zip https://releases.hashicorp.com/terraform/0.11.2/t
     unzip -o -d /tmp /tmp/terraform.zip && \
     mv /tmp/terraform /usr/bin/terraform
 RUN pip install docker-compose
+RUN apk add nodejs nodejs-npm
 
 USER jenkins
