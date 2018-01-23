@@ -90,6 +90,19 @@
       ],
       "Effect": "Allow",
       "Resource": "*"
+    },
+    {
+      "Sid": "Stmt1397834745000",
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListBucket",
+        "s3:PutObject",
+        "s3:PutObjectAcl"
+      ],
+      "Resource": [
+        "arn:aws:s3:::uscis-rfds.adhocteam.us",
+        "arn:aws:s3:::uscis-rfds.adhocteam.us/*"
+      ]
     }
   ]
 }
