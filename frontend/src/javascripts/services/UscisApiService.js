@@ -41,6 +41,8 @@ const UscisApiService = {
 
   getSubmission: (id) => authedRequest(`/submissions/${id}`, {}, `Failed to get submission ${id}.`),
 
+  getSubmissions: () => authedRequest("/submissions", {}, "Failed to get submissions."),
+
   login: (email, password) => {
     return fetch("/auth/sign_in", {
       method: "POST",

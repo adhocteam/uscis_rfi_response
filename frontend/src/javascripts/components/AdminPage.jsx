@@ -1,8 +1,9 @@
 import React from "react";
-import { Route } from "react-router-dom";
+import { Link, Route, Switch } from "react-router-dom";
 
 import UscisApiService from "../services/UscisApiService";
-import SubmissionPage from "./SubmissionPage";
+import Submission from "./Submission";
+import Submissions from "./Submissions";
 
 class AdminPage extends React.Component {
   state = { admin: null };
@@ -20,13 +21,18 @@ class AdminPage extends React.Component {
 
   render() {
     const { admin } = this.state;
+    const { url } = this.props.match;
+
     return admin ? (
       <div>
-        <p>Hello, {admin.name || admin.email}!</p>
-        <Route
-          path={`${this.props.match.url}/:id`}
-          component={SubmissionPage}
-        />
+        <p>
+          Hello, {admin.name || admin.email}!&nbsp;
+          <Link to={url}>View all submissions</Link>
+        </p>
+        <Switch>
+          <Route path={`${url}/:id`} component={Submission} />
+          <Route path={`${url}`} component={Submissions} />
+        </Switch>
       </div>
     ) : <p>No admin found!</p>;
   }
