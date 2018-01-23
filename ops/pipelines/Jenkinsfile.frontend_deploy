@@ -1,6 +1,8 @@
 pipeline {
   agent any
 
+  tools {nodejs "node-9-4-0"}
+
   parameters {
     choice(
       choices: 'uscis-rfds.adhocteam.us',
@@ -30,12 +32,10 @@ pipeline {
 
     stage('Build and deploy') {
       steps {
-        nodejs('node-9-4-0') {
-          sh """
-            cd ops/scripts
-            ./frontend-deploy.sh ${params.BUCKET}
-          """
-        }
+        sh """
+          cd ops/scripts
+          ./frontend-deploy.sh ${params.BUCKET}
+        """
       }
     }
   }
