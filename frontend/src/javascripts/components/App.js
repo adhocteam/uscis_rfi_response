@@ -18,7 +18,7 @@ export default function App() {
                   id="main"
                   className="ds-u-serif ds-u-color--white ds-u-font-size--h2 ds-u-md-font-size--h1 ds-u-font-weight--normal ds-u-margin-top--3 ds-u-margin-bottom--3"
                 >
-                  USCIS Uploader Front-End
+                  USCIS RFDS Front-End
                 </h1>
               </div>
             </div>

@@ -11,16 +11,20 @@ class Submissions extends React.Component {
   }
 
   getSubmissions = () => {
-    UscisApiService
-      .getSubmissions()
-      .then(submissions => { this.setState({ submissions }) })
-      .catch(err => { console.error(err); });
+    UscisApiService.getSubmissions()
+      .then(submissions => {
+        this.setState({ submissions });
+      })
+      .catch(err => {
+        console.error(err);
+      });
   };
 
   render() {
     const { submissions } = this.state;
     const submissionRows =
-      submissions && submissions.map(submission => (
+      submissions &&
+      submissions.map(submission => (
         <tr key={`submission-${submission.id}`}>
           <td>
             <Link to={`${this.props.match.url}/${submission.id}`}>
@@ -34,16 +38,17 @@ class Submissions extends React.Component {
     return submissions ? (
       <table>
         <thead>
-          <th>Submission</th>
-          <th>Status</th>
+          <tr>
+            <th>Submission</th>
+            <th>Status</th>
+          </tr>
         </thead>
-        <tbody>
-          {submissionRows}
-        </tbody>
+        <tbody>{submissionRows}</tbody>
       </table>
-    ) : <p>No submissions found!</p>;
+    ) : (
+      <p>No submissions found!</p>
+    );
   }
 }
 
 export default Submissions;
-
