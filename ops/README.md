@@ -75,7 +75,7 @@ Be sure to fill in the appropriate values for `<aws-account-id>`, `<aws-region>`
 Build docker image for backend app:
 
 ```
-cd ops
+cd ops/scripts
 ./build.sh <env> <version>
 ```
 
@@ -86,21 +86,21 @@ If no <version> is supplied, the current git commit is used.
 To push to the Elastic Container Registry:
 
 ```
-cd ops
+cd ops/scripts
 ./push.sh <env> <version>
 ```
 
 Convenience for running `./build.sh` and `./push.sh`:
 
 ```
-cd ops
+cd ops/scripts
 ./release.sh <env> <version>
 ```
 
 Convenience for deploying a new image to ECS:
 
 ```
-cd ops
+cd ops/scripts
 ./deploy.sh <env> <version>
 ```
 

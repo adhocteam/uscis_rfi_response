@@ -26,6 +26,6 @@ then
   FORCE="-auto-approve"
 fi
 
-pushd terraform/$ENV/backend
+pushd ../terraform/$ENV/backend
 terraform init && terraform apply -var service_version=$VERSION $FORCE
 popd
