@@ -2,8 +2,8 @@ import React from "react";
 
 import UscisApiService from "../services/UscisApiService";
 
-class SubmissionPage extends React.Component {
-  state = {};
+class Submission extends React.Component {
+  state = { submission: null };
 
   componentDidMount() {
     const { params: { id } } = this.props.match;
@@ -13,19 +13,62 @@ class SubmissionPage extends React.Component {
       .catch(err => { console.error(err); });
   }
 
+  handleNotesChange = (e) => {
+    this.setState({
+      submission: { ...this.state.submission, notes: e.target.value }
+    });
+  };
+
+  handleStatusChange = (e) => {
+    this.setState({
+      submission: { ...this.state.submission, status: e.target.value }
+    });
+  };
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    UscisApiService
+      .updateSubmission(this.state.submission)
+      .catch(err => { console.error(err); });
+  };
+
   renderSubmission = () => {
     const { submission } = this.state;
     return submission ? (
       <section>
         <img alt={`UUID: ${submission.id}`} src={submission.uri} />
         <div>
-          <div>Status: {submission.status}</div>
-          <div>
-            <label htmlFor="notes">Notes</label>
+          <form onSubmit={this.handleSubmit}>
             <div>
-              <textarea id="notes">{submission.notes}</textarea>
+              <label htmlFor="notes">Notes</label>
+              <br />
+              <textarea
+                  id="notes"
+                  name="notes"
+                  value={submission.notes}
+                  onChange={this.handleNotesChange} />
             </div>
-          </div>
+            <div>
+              <input
+                  id="approve"
+                  type="radio"
+                  name="status"
+                  value="approved"
+                  checked={submission.status === "approved"}
+                  onChange={this.handleStatusChange} />
+              <label htmlFor="approve">Approve</label>
+              <br />
+              <input
+                  id="deny"
+                  type="radio"
+                  name="status"
+                  value="denied"
+                  checked={submission.status === "denied"}
+                  onChange={this.handleStatusChange} />
+              <label htmlFor="deny">Deny</label>
+            </div>
+            <input type="submit" value="Submit" />
+          </form>
         </div>
       </section>
     ) : <p>No submission found!</p>;
@@ -54,4 +97,4 @@ class SubmissionPage extends React.Component {
   }
 }
 
-export default SubmissionPage;
+export default Submission;
