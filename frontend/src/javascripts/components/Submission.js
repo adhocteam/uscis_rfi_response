@@ -41,6 +41,7 @@ class Submission extends React.Component {
           <form onSubmit={this.handleSubmit}>
             <div>
               <label htmlFor="notes">Notes</label>
+              <br />
               <textarea
                   id="notes"
                   name="notes"
@@ -48,7 +49,6 @@ class Submission extends React.Component {
                   onChange={this.handleNotesChange} />
             </div>
             <div>
-              <label htmlFor="approve">Approve</label>
               <input
                   id="approve"
                   type="radio"
@@ -56,7 +56,8 @@ class Submission extends React.Component {
                   value="approved"
                   checked={submission.status === "approved"}
                   onChange={this.handleStatusChange} />
-              <label htmlFor="deny">Deny</label>
+              <label htmlFor="approve">Approve</label>
+              <br />
               <input
                   id="deny"
                   type="radio"
@@ -64,6 +65,7 @@ class Submission extends React.Component {
                   value="denied"
                   checked={submission.status === "denied"}
                   onChange={this.handleStatusChange} />
+              <label htmlFor="deny">Deny</label>
             </div>
             <input type="submit" value="Submit" />
           </form>
