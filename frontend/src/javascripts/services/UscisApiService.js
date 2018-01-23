@@ -66,7 +66,13 @@ const UscisApiService = {
         throw new Error("Failed to log in.");
       }
     });
-  }
+  },
+
+  updateSubmission: ({ id, notes, status }) =>
+    authedRequest(`/submissions/${id}`, {
+      method: "PUT",
+      body: JSON.stringify({ notes, status })
+    }, `Failed to update submission ${id}.`),
 };
 
 export default UscisApiService;
