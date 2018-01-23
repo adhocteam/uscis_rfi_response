@@ -1,5 +1,7 @@
 import React from "react";
 import ReactS3Uploader from "react-s3-uploader";
+import TextField from "@cmsgov/design-system-core/dist/components/TextField/TextField";
+import Button from "@cmsgov/design-system-core/dist/components/Button/Button";
 import UscisApiService from "../services/UscisApiService";
 
 class UploadPage extends React.Component {
@@ -85,22 +87,19 @@ class UploadPage extends React.Component {
 
   render() {
     return (
-      <div className="App">
-        <h1>USCIS Uploader Front-End</h1>
+      <div className="ds-l-container ds-u-padding-top--3 ds-u-sm-text-align--center ds-u-sm-text-align--left">
         <p>
           Fill out your provided UUID and select your image, then hit submit.
         </p>
         <form onSubmit={this.handleSubmit}>
-          <label>
-            UUID
-            <input
-              type="text"
-              value={this.state.uuid}
-              onChange={e => this.setState({ uuid: e.target.value })}
-            />
-          </label>
-          <br />
+          <TextField
+            label="UUID"
+            name="uuid"
+            value={this.state.uuid}
+            onChange={e => this.setState({ uuid: e.target.value })}
+          />
           <ReactS3Uploader
+            className="ds-c-field"
             autoUpload={false}
             uploadRequestHeaders={{}}
             getSignedUrl={this.getSignedUrl}
@@ -109,11 +108,12 @@ class UploadPage extends React.Component {
             }}
             onChange={this.readFile}
           />
-          <br />
-          <input type="submit" value="Submit" />
+          <Button type="submit" variation="primary">
+            Submit
+          </Button>
         </form>
 
-        <h3> image preview: </h3>
+        <h3>Image Preview:</h3>
         <img src="" height="200" alt="Preview of what will be uploaded." />
       </div>
     );
