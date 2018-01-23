@@ -17,12 +17,6 @@ pipeline {
       defaultValue: '*/master',
       description: 'The branch used to run the deploy.'
     )
-    // Can only deploy to "dev" for now
-    //string(
-      //defaultValue: "dev",
-      //description: 'The environment to deploy to',
-      //name: 'ENVIRONMENT'
-    //)
   }
 
   environment {
