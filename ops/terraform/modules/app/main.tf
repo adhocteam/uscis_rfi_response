@@ -54,8 +54,8 @@ resource "aws_security_group" "lb_sg" {
 
   ingress {
     protocol    = "tcp"
-    from_port   = 80
-    to_port     = 80
+    from_port   = 443
+    to_port     = 443
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -269,8 +269,10 @@ resource "aws_alb" "main" {
 
 resource "aws_alb_listener" "front_end" {
   load_balancer_arn = "${aws_alb.main.id}"
-  port              = "80"
-  protocol          = "HTTP"
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2015-05"
+  certificate_arn   = "${var.ssl_cert_id}"
 
   default_action {
     target_group_arn = "${aws_alb_target_group.main.id}"
