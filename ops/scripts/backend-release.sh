@@ -20,5 +20,5 @@ then
   VERSION=$(git rev-parse --short=12 HEAD)
 fi
 
-./build.sh $ENV $VERSION
-./push.sh $ENV $VERSION
+./backend-build.sh $ENV $VERSION
+./backend-push.sh $ENV $VERSION
