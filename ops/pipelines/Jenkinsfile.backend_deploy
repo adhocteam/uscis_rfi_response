@@ -44,7 +44,7 @@ pipeline {
       steps {
         sh """
           cd ops/scripts
-          ./backend-deploy.sh dev $VERSION true
+          ./backend-deploy.sh dev ${params.VERSION} true
         """
       }
     }
