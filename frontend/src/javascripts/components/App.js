@@ -1,5 +1,6 @@
 import React from "react";
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import AdminPage from "./AdminPage";
 import UploadPage from "./UploadPage";
 
 export default function App() {
@@ -7,7 +8,7 @@ export default function App() {
     <BrowserRouter>
       <Switch>
         <Route path="/" exact component={UploadPage} />
-        <Redirect to="/" />
+        <Route path="/review" component={AdminPage} />
       </Switch>
     </BrowserRouter>
   );
