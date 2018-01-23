@@ -1,18 +1,40 @@
 import history from "../history";
 
-const authedRequest =
-  (url, settings, error) => fetch(url, {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        "access-token": sessionStorage.getItem("token"),
-        client: sessionStorage.getItem("client"),
-        uid: sessionStorage.getItem("uid"),
-      },
-      ...settings,
-    }).then(resp => {
-    if (resp.ok) { return resp.json(); }
-    if (resp.status === 401) { history.replace(`/login?next=${history.location.pathname}`); }
+const authedRequest = (url, settings, error) =>
+  fetch(url, {
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      "access-token": sessionStorage.getItem("token"),
+      client: sessionStorage.getItem("client"),
+      uid: sessionStorage.getItem("uid"),
+      expiry: sessionStorage.getItem("expiry")
+    },
+    ...settings
+  }).then(resp => {
+    if (resp.ok) {
+      let token = resp.headers.get("access-token");
+      let client = resp.headers.get("client");
+      let uid = resp.headers.get("uid");
+      let expiry = resp.headers.get("expiry");
+      if (token) {
+        sessionStorage.setItem("token", token);
+      }
+      if (client) {
+        sessionStorage.setItem("client", client);
+      }
+      if (uid) {
+        sessionStorage.setItem("uid", uid);
+      }
+      if (expiry) {
+        // expiry appears to be returned in seconds, javascript is milliseconds
+        sessionStorage.setItem("expiry", 1000 * expiry);
+      }
+      return resp.json();
+    }
+    if (resp.status === 401) {
+      history.replace(`/login?next=${history.location.pathname}`);
+    }
     throw new Error(error);
   });
 
@@ -39,9 +61,19 @@ const UscisApiService = {
     });
   },
 
-  getSubmission: (id) => authedRequest(`/submissions/${id}`, {}, `Failed to get submission ${id}.`),
+  filterSubmissions: filter => {
+    return authedRequest(
+      `submissions/status?filter=${filter}`,
+      {},
+      "Failed to get submissions."
+    );
+  },
 
-  getSubmissions: () => authedRequest("/submissions", {}, "Failed to get submissions."),
+  getSubmission: id =>
+    authedRequest(`/submissions/${id}`, {}, `Failed to get submission ${id}.`),
+
+  getSubmissions: () =>
+    authedRequest("/submissions", {}, "Failed to get submissions."),
 
   login: (email, password) => {
     return fetch("/auth/sign_in", {
@@ -69,10 +101,14 @@ const UscisApiService = {
   },
 
   updateSubmission: ({ id, notes, status }) =>
-    authedRequest(`/submissions/${id}`, {
-      method: "PUT",
-      body: JSON.stringify({ notes, status })
-    }, `Failed to update submission ${id}.`),
+    authedRequest(
+      `/submissions/${id}`,
+      {
+        method: "PUT",
+        body: JSON.stringify({ notes, status })
+      },
+      `Failed to update submission ${id}.`
+    )
 };
 
 export default UscisApiService;
