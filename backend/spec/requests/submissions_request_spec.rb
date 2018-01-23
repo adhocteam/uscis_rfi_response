@@ -159,6 +159,7 @@ RSpec.describe SubmissionsController, type: :request do
         params = { notes: 'foobar' }
         put "/submissions/#{Submission.first.id}/notes", params: params, headers: auth_headers
         expect(response).to have_http_status(:success)
+      end
     end
   end
 end
