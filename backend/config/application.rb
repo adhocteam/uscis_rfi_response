@@ -29,5 +29,19 @@ module Backend
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+
+    config.middleware.insert_before 0, Rack::Cors do
+      allow do
+        origins '*'
+        resource '*',
+          headers: :any,
+          expose: ['access-token', 'expiry', 'token-type', 'uid', 'client'],
+          methods: [:get, :post, :delete, :put, :patch, :options, :head]
+        # XXX: it's not clear to me if we need the Access-Control-Allow-Credentials header?
+        # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Credentials
+        # it's not possible to enable on '*' so we can't set it
+        # credentials: true
+      end
+    end
   end
 end
