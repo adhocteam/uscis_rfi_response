@@ -4,35 +4,39 @@ class SubmissionsController < ApplicationController
   before_action :authenticate_admin!, except: [:presigned_url]
 
   def index
-    @submissions = Submission.all
-    render json: @submissions
+    submissions = Submission.all
+    render json: submissions
   end
 
   def show
-    @submission = Submission.find(params.fetch(:id))
-    render json: @submission, include: :customer
+    submission = Submission.find(params.fetch(:id))
+    render json: submission, include: :customer
   end
 
   def create
-    @customer = Customer.find_by(email: params.fetch(:email))
-    @submission = @customer.submissions.create
-    render json: @submission, status: :created
-  end
-
-  def update
+    customer = Customer.find_by(email: params.fetch(:email))
+    submission = customer.submissions.create
+    render json: submission, status: :created
   end
 
   def approve
-    @submission = Submission.find(params.fetch(:id))
-    @submission.update(status: :approved)
-    render json: @submission
+    submission = Submission.find(params.fetch(:id))
+    submission.update(status: :approved)
+    head :ok
   end
 
   def deny
-    @submission = Submission.find(params.fetch(:id))
-    @submission.update(status: :denied)
-    render json: @submission
+    submission = Submission.find(params.fetch(:id))
+    submission.update(status: :denied)
+    head :ok
   end
+
+  def notes
+    submission = Submission.find(params.fetch(:id))
+    submission.update(notes: params.fetch(:notes))
+    head :ok
+  end
+
 
   def presigned_url
     begin
