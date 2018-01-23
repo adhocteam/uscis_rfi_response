@@ -63,3 +63,8 @@ variable "task_count" {
   description = "Desired number ECS tasks to run"
   default     = 2
 }
+
+variable "ssl_cert_id" {
+  description = "ACM cert arn to use with the Jenkins ELB"
+  default     = "arn:aws:acm:us-east-1:***REMOVED***:certificate/***REMOVED***"
+}
