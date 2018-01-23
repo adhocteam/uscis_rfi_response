@@ -7,7 +7,7 @@ VERSION=$2
 FORCE=$3
 
 usage() {
-  echo "./deploy.sh ENV VERSION"
+  echo "./backend-deploy.sh ENV VERSION"
   exit 1
 }
 

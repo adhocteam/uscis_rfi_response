@@ -6,7 +6,7 @@ ENV=$1
 VERSION=$2
 
 usage() {
-  echo "./release.sh ENV VERSION"
+  echo "./backend-release.sh ENV VERSION"
   exit 1
 }
 
