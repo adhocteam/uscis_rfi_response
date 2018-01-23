@@ -19,6 +19,7 @@ const envConfig = require(`./config/${env}.js`);
 let webpackConfig = {
   entry: ["babel-polyfill", jsEntry, cssEntry],
   output: {
+    publicPath: "/",
     filename: isProd ? "app.[chunkhash].js" : "app.js",
     path: outputDir
   },
@@ -72,7 +73,7 @@ let webpackConfig = {
     new CleanWebpackPlugin([outputDir]),
     new ExtractTextPlugin(isProd ? "style.[chunkhash].css" : "style.css"),
     new HtmlWebpackPlugin({
-      favicon: "./public/favicon.ico",
+      favicon: "public/favicon.ico",
       inject: true,
       template: "public/index.html"
     }),
@@ -81,11 +82,12 @@ let webpackConfig = {
   devServer: {
     host: "0.0.0.0",
     port: 3000,
-    proxy: {
-      "/api": {
+    proxy: [
+      {
+        context: ["/submissions", "/admin", "/auth"],
         target: "http://backend:3001"
       }
-    },
+    ],
     contentBase: "build",
     historyApiFallback: true
   }

@@ -7,10 +7,11 @@ class SubmissionPage extends React.Component {
 
   componentDidMount() {
     const { params: { id } } = this.props.match;
-    UscisApiService
-      .getSubmission(id)
+    UscisApiService.getSubmission(id)
       .then(submission => this.setState({ submission }))
-      .catch(err => { console.error(err); });
+      .catch(err => {
+        console.error(err);
+      });
   }
 
   renderSubmission = () => {
@@ -28,12 +29,16 @@ class SubmissionPage extends React.Component {
           </div>
         </div>
       </section>
-    ) : <p>No submission found!</p>;
+    ) : (
+      <p>No submission found!</p>
+    );
   };
 
   renderCustomer = () => {
     const { submission } = this.state;
-    if (!submission) { return null; }
+    if (!submission) {
+      return null;
+    }
 
     const { customer } = submission;
     return customer ? (
@@ -41,8 +46,10 @@ class SubmissionPage extends React.Component {
         <div>Name: {customer.name}</div>
         <div>Email: {customer.email}</div>
       </section>
-    ) : <p>No customer found!</p>;
-  }
+    ) : (
+      <p>No customer found!</p>
+    );
+  };
 
   render() {
     return (

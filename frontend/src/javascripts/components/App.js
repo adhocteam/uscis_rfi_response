@@ -24,7 +24,6 @@ export default function App() {
         <Switch>
           <Route path="/" exact component={UploadPage} />
           <Route path="/review" component={AdminPage} />
-          <Redirect to="/" />
         </Switch>
       </div>
     </BrowserRouter>
