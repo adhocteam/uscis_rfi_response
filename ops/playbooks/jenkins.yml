@@ -145,6 +145,8 @@
         restart_policy: on-failure
         restart_retries: 10
         restart: yes
+        env:
+          JAVA_OPTS: "-Duser.timezone=America/New_York"
 
     - name: restart nginx
       service:
