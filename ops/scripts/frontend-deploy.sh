@@ -2,7 +2,7 @@
 
 set -e
 
-BUCKET=$3
+BUCKET=$1
 
 usage() {
   echo "./frontend-deploy.sh BUCKET"
@@ -14,6 +14,6 @@ then
   usage
 fi
 
-pushd frontend
-yarn build
+pushd ../../frontend
+yarn install && yarn build
 aws s3 sync build/ s3://$BUCKET

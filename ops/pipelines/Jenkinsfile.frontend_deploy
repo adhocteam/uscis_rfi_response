@@ -7,9 +7,27 @@ pipeline {
       description: 'The S3 bucket to deploy to',
       name: 'BUCKET'
     )
+    string(
+      defaultValue: "master",
+      description: 'The branch to deploy',
+      name: 'GIT_TAG'
+    )
   }
 
   stages {
+    stage('Checkout') {
+      steps {
+        checkout([
+          $class: 'GitSCM',
+          branches: [[name: params.GIT_TAG]],
+          userRemoteConfigs: [[
+            credentialsId: '21eadf90-b536-4fa5-a9de-fb6a8be070ab',
+            url: 'git@github.com:adhocteam/uscis_rfi_response.git'
+          ]]
+        ])
+      }
+    }
+
     stage('Build and deploy') {
       steps {
         sh """
