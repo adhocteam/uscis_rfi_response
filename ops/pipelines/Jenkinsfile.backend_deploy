@@ -7,11 +7,12 @@ pipeline {
       description: 'The commit hash or tag to deploy. Required.',
       name: 'VERSION'
     )
-    string(
-      defaultValue: "dev",
-      description: 'The environment to deploy to',
-      name: 'ENVIRONMENT'
-    )
+    // Can only deploy to "dev" for now
+    //string(
+      //defaultValue: "dev",
+      //description: 'The environment to deploy to',
+      //name: 'ENVIRONMENT'
+    //)
   }
 
   stages {
@@ -43,7 +44,7 @@ pipeline {
       steps {
         sh """
           cd ops/scripts
-          ./backend-deploy.sh $ENVIRONMENT $VERSION true
+          ./backend-deploy.sh dev $VERSION true
         """
       }
     }
