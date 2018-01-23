@@ -65,5 +65,15 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     Name = "${var.bucket_name}"
   }
 
-  acm_certificate_arn = "${var.ssl_cert_id}"
+  restrictions {
+    geo_restriction {
+      locations        = ["US"]
+      restriction_type = "whitelist"
+    }
+  }
+
+  viewer_certificate {
+    acm_certificate_arn = "${var.ssl_cert_id}"
+    ssl_support_method  = "sni-only"
+  }
 }
