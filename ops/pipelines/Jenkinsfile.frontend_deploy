@@ -1,0 +1,22 @@
+pipeline {
+  agent any
+
+  parameters {
+    choice(
+      choices: 'uscis-rfds.adhocteam.us',
+      description: 'The S3 bucket to deploy to',
+      name: 'BUCKET'
+    )
+  }
+
+  stages {
+    stage('Build and deploy') {
+      steps {
+        sh """
+          cd ops/scripts
+          ./frontend-deploy.sh ${params.BUCKET}
+        """
+      }
+    }
+  }
+}
