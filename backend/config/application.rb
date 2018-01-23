@@ -32,7 +32,7 @@ module Backend
 
     config.middleware.insert_before 0, Rack::Cors do
       allow do
-        origins '*'
+        origins 'uscis-rfds.adhocteam.us', 'https://uscis-rfds.adhocteam.us.s3-website-us-east-1.amazonaws.com'
         resource '*',
           headers: :any,
           expose: ['access-token', 'expiry', 'token-type', 'uid', 'client'],
