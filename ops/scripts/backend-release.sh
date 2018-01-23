@@ -17,7 +17,12 @@ fi
 
 if [ -z "$VERSION" ]
 then
-  VERSION=$(git rev-parse --short=12 HEAD)
+  VERSION=$(git rev-parse --short=12 origin/master)
+fi
+
+if [ ${#VERSION} -gt 12 ]
+then
+  VERSION="${VERSION:0:12}"
 fi
 
 ./backend-build.sh $ENV $VERSION
