@@ -14,21 +14,12 @@ const authedRequest = (url, settings, error) =>
   }).then(resp => {
     if (resp.ok) {
       let token = resp.headers.get("access-token");
-      let client = resp.headers.get("client");
-      let uid = resp.headers.get("uid");
       let expiry = resp.headers.get("expiry");
       if (token) {
         sessionStorage.setItem("token", token);
       }
-      if (client) {
-        sessionStorage.setItem("client", client);
-      }
-      if (uid) {
-        sessionStorage.setItem("uid", uid);
-      }
       if (expiry) {
-        // expiry appears to be returned in seconds, javascript is milliseconds
-        sessionStorage.setItem("expiry", 1000 * expiry);
+        sessionStorage.setItem("expiry", expiry);
       }
       return resp.json();
     }
@@ -91,8 +82,7 @@ const UscisApiService = {
         sessionStorage.setItem("token", resp.headers.get("access-token"));
         sessionStorage.setItem("client", resp.headers.get("client"));
         sessionStorage.setItem("uid", resp.headers.get("uid"));
-        // expiry appears to be returned in seconds, javascript is milliseconds
-        sessionStorage.setItem("expiry", 1000 * resp.headers.get("expiry"));
+        sessionStorage.setItem("expiry", resp.headers.get("expiry"));
         return resp.json();
       } else {
         throw new Error("Failed to log in.");
