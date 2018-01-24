@@ -6,3 +6,11 @@ variable "az_count" {
   description = "Number of AZs to cover in a given AWS region"
   default     = "2"
 }
+
+variable "with_app" {
+  default = false
+}
+
+variable "with_data" {
+  default = false
+}

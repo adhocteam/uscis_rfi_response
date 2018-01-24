@@ -3,6 +3,8 @@ provider "aws" {
 }
 
 module "uscis_vpc" {
-  source   = "../../modules/vpc"
-  vpc_name = "uscis-vpc"
+  source    = "../../modules/vpc"
+  vpc_name  = "uscis-vpc"
+  with_app  = true
+  with_data = true
 }
