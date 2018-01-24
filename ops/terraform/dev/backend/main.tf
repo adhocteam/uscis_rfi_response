@@ -8,11 +8,27 @@ data "aws_vpc" "uscis_vpc" {
   }
 }
 
-data "aws_subnet_ids" "uscis_subnet_ids" {
+data "aws_subnet_ids" "uscis_dmz_subnet_ids" {
   vpc_id = "${data.aws_vpc.uscis_vpc.id}"
 
   tags {
-    Name = "ecs-uscis-vpc"
+    Name = "ecs-uscis-vpc-dmz"
+  }
+}
+
+data "aws_subnet_ids" "uscis_app_subnet_ids" {
+  vpc_id = "${data.aws_vpc.uscis_vpc.id}"
+
+  tags {
+    Name = "ecs-uscis-vpc-app"
+  }
+}
+
+data "aws_subnet_ids" "uscis_data_subnet_ids" {
+  vpc_id = "${data.aws_vpc.uscis_vpc.id}"
+
+  tags {
+    Name = "ecs-uscis-vpc-data"
   }
 }
 
@@ -37,18 +53,19 @@ module "uscis_backend" {
   container_name = "uscis-backend"
   ecr_img_url    = "${data.aws_ecr_repository.uscis_backend.repository_url}"
 
-  vpc_id     = "${data.aws_vpc.uscis_vpc.id}"
-  subnet_ids = ["${data.aws_subnet_ids.uscis_subnet_ids.ids}"]
+  vpc_id         = "${data.aws_vpc.uscis_vpc.id}"
+  dmz_subnet_ids = ["${data.aws_subnet_ids.uscis_dmz_subnet_ids.ids}"]
+  app_subnet_ids = ["${data.aws_subnet_ids.uscis_app_subnet_ids.ids}"]
 
   service_version = "${var.service_version}"
-  task_count      = 1
+  task_count      = 2
   asg_desired     = 1
   ami_id          = "ami-28456852"
 }
 
 resource "aws_db_subnet_group" "backend" {
   name_prefix = "tf-uscis-backend-"
-  subnet_ids  = ["${data.aws_subnet_ids.uscis_subnet_ids.ids}"]
+  subnet_ids  = ["${data.aws_subnet_ids.uscis_data_subnet_ids.ids}"]
 
   tags {
     Name = "uscis-backend-db-subnet-group"
@@ -91,5 +108,9 @@ resource "aws_db_instance" "backend" {
 
   tags {
     Name = "uscis-backend-db"
+  }
+
+  lifecycle {
+    ignore_changes = ["snapshot_identifier"]
   }
 }

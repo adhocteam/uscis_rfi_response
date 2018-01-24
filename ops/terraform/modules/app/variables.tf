@@ -6,8 +6,13 @@ variable "vpc_id" {
   description = "The ID of the VPC where the app will be deployed"
 }
 
-variable "subnet_ids" {
-  description = "Subnets where resources will be located"
+variable "dmz_subnet_ids" {
+  description = "Subnets where publicly accessible resources will be located"
+  type        = "list"
+}
+
+variable "app_subnet_ids" {
+  description = "Subnets where application servers will be located"
   type        = "list"
 }
 
