@@ -42,6 +42,8 @@ module "uscis_backend" {
 
   service_version = "${var.service_version}"
   task_count      = 1
+  asg_desired     = 2
+  ami_id          = "ami-28456852"
 }
 
 resource "aws_db_subnet_group" "backend" {
