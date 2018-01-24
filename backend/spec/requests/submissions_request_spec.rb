@@ -18,7 +18,6 @@ RSpec.describe SubmissionsController, type: :request do
     submission = Submission.new(
       timestamp: Faker::Time.between(Time.current - 1.day, Time.current),
       uri: Faker::Internet.url,
-      status: :submitted,
       notes: Faker::Lorem.sentence
     )
 
@@ -54,6 +53,13 @@ RSpec.describe SubmissionsController, type: :request do
     describe 'put #update' do
       it '401s' do
         put "/submissions/#{Submission.first.id}"
+        expect(response).to have_http_status(401)
+      end
+    end
+
+    describe 'get #filter' do
+      it '401s' do
+        get '/submissions/filter?status=closed'
         expect(response).to have_http_status(401)
       end
     end
@@ -170,6 +176,23 @@ RSpec.describe SubmissionsController, type: :request do
         expect(body['status']).to eq('approved')
         expect(body['notes']).to eq('foo bar')
         expect(body['uri']).to eq(submission.uri)
+      end
+    end
+
+    describe 'get #filter' do
+      it 'returns filtered items when they exist' do
+        get '/submissions/filter?status=requested', headers: auth_headers
+        expect(response).to have_http_status(:success)
+        body = JSON.parse(response.body)
+        expect(body.length).to eq 1
+        expect(body[0]['status']).to eq 'requested'
+      end
+
+      it 'returns empty when they don\'t' do
+        get '/submissions/filter?status=submitted', headers: auth_headers
+        expect(response).to have_http_status(:success)
+        body = JSON.parse(response.body)
+        expect(body.length).to eq 0
       end
     end
   end

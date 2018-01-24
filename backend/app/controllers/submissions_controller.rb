@@ -40,6 +40,12 @@ class SubmissionsController < ApplicationController
     render json: { 'status': 'ok', 'signedUrl': url }
   end
 
+  def filter
+    status = params.fetch('status')
+    submissions = Submission.where(status: status)
+    render json: submissions
+  end
+
   private
 
   def review_params
