@@ -44,7 +44,7 @@ class Submissions extends React.Component {
       submissions.map(submission => (
         <tr key={`submission-${submission.id}`}>
           <td>
-            <Link to={`${this.props.match.url}/${submission.id}`}>
+            <Link to={`${this.props.match.url}/submissions/${submission.id}`}>
               {submission.id}
             </Link>
           </td>
