@@ -20,7 +20,31 @@ yarn upgrade @cmsgov/design-system-core @cmsgov/design-system-layout
 
 ## Testing
 
-**TODO:** Implement jest tests using enzyme for mounting React components.
+To run all tests (unit and end-to-end):
+
+```
+yarn test
+```
+
+### Unit Tests
+
+Uses jest as the test runner / framework and enzyme to render React components for testing.
+
+```
+yarn unit-test
+```
+
+### End-to-End Tests
+
+Uses nightwatch and selenium.  Runs headlessly via chromedriver by default.
+
+```
+yarn e2e-test
+```
+
+### Notes on Writing Tests
+
+* Whenever you have to identify an HTML element for testing, add a class that starts with `qa-uscis-` so that it's easily recognizable.
 
 ## Deployment
 
