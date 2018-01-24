@@ -8,7 +8,7 @@ provider "aws" {
 
 resource "aws_autoscaling_group" "app" {
   name                 = "tf-${var.container_name}-asg"
-  vpc_zone_identifier  = ["${var.subnet_ids}"]
+  vpc_zone_identifier  = ["${var.dmz_subnet_ids}"]
   min_size             = "${var.asg_min}"
   max_size             = "${var.asg_max}"
   desired_capacity     = "${var.asg_desired}"
@@ -264,7 +264,7 @@ resource "aws_alb_target_group" "main" {
 
 resource "aws_alb" "main" {
   name            = "tf-${var.container_name}-alb-ecs"
-  subnets         = ["${var.subnet_ids}"]
+  subnets         = ["${var.dmz_subnet_ids}"]
   security_groups = ["${aws_security_group.lb_sg.id}"]
 
   tags {

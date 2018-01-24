@@ -20,7 +20,29 @@ resource "aws_subnet" "main" {
   vpc_id            = "${aws_vpc.main.id}"
 
   tags {
-    Name = "ecs-${var.vpc_name}"
+    Name = "ecs-${var.vpc_name}-dmz"
+  }
+}
+
+resource "aws_subnet" "app" {
+  count             = "${var.az_count}"
+  cidr_block        = "${cidrsubnet(aws_vpc.main.cidr_block, 8, count.index + 2)}"
+  availability_zone = "${data.aws_availability_zones.available.names[count.index]}"
+  vpc_id            = "${aws_vpc.main.id}"
+
+  tags {
+    Name = "ecs-${var.vpc_name}-app"
+  }
+}
+
+resource "aws_subnet" "data" {
+  count             = "${var.az_count}"
+  cidr_block        = "${cidrsubnet(aws_vpc.main.cidr_block, 8, count.index + 4)}"
+  availability_zone = "${data.aws_availability_zones.available.names[count.index]}"
+  vpc_id            = "${aws_vpc.main.id}"
+
+  tags {
+    Name = "ecs-${var.vpc_name}-data"
   }
 }
 
