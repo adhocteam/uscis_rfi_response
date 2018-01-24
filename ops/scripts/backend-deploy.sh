@@ -46,7 +46,7 @@ fi
 
 # Verify terraform is only changing the appropriate resources
 pushd ../terraform/$ENV/backend
-TF_OUT=$(terraform plan \
+TF_OUT=$(terraform init && terraform plan \
   -var service_version=$VERSION \
   -var db_password=$DB_PASS)
 
@@ -63,7 +63,7 @@ then
 fi
 
 # Run the deploy
-terraform init && terraform apply -var service_version=$VERSION $FORCE
+terraform apply -var service_version=$VERSION $FORCE
 
 popd
 
