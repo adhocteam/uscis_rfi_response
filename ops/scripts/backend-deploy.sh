@@ -26,6 +26,8 @@ export TF_CLI_ARGS="-no-color"
 export TF_VAR_db_password="$DB_PASS"
 export AWS_DEFAULT_REGION="us-east-1"
 
+CLUSTER_NAME="terraform-uscis-backend-ecs-cluster"
+
 TARGET_GROUP="tf-ecs-uscis-backend"
 TARGET_GROUP_ARN=$(aws elbv2 describe-target-groups \
   --names "$TARGET_GROUP" \
@@ -67,13 +69,26 @@ terraform apply -var service_version=$VERSION $FORCE
 
 popd
 
+# Verify the deployment's health
+#
+# Criteria:
+# - Only "healthy" container instances are present in target group
+# - "Running tasks" count matches "Desired tasks" count for the service
+# - There are no task definitions marked "INACTIVE" currently in-service
+
 # Stash the desired task count
-DESIRED_TASKS=$(aws ecs describe-services --cluster terraform-uscis-backend-ecs-cluster \
-    --services tf-ecs-uscis-backend \
-    --query "services[?serviceName=='tf-ecs-uscis-backend'].{d: desiredCount}" \
+DESIRED_COUNT=$(aws ecs describe-services --cluster "$CLUSTER_NAME" \
+    --services "$TARGET_GROUP" \
+    --query "services[?serviceName=='$TARGET_GROUP'].{d: desiredCount}" \
     --output text)
 
-# Verify the deployment's health
+# Stash the new task definition
+ACTIVE_TASK=$(aws ecs list-task-definitions \
+    --status ACTIVE \
+    --query 'taskDefinitionArns[0]' \
+    --output text)
+
+# Try polling for 10 minutes max to verify a deployment's health
 TIMEOUT=600
 ELAPSED=0
 SLEEP_SECONDS=60
@@ -97,12 +112,26 @@ do
   HEALTH_CHECK=$(echo "$RESULT" | grep -E "unhealthy|initial|draining|unused")
   set -e
 
-  RUNNING_TASKS=$(aws ecs describe-services --cluster terraform-uscis-backend-ecs-cluster \
-    --services tf-ecs-uscis-backend \
-    --query "services[?serviceName=='tf-ecs-uscis-backend'].{r: runningCount}" \
+  RUNNING_COUNT=$(aws ecs describe-services --cluster "$CLUSTER_NAME" \
+    --services "$TARGET_GROUP" \
+    --query "services[?serviceName=='$TARGET_GROUP'].{r: runningCount}" \
     --output text)
 
-  if [ -z "$HEALTH_CHECK" ] && [ "$RUNNING_TASKS" == "$DESIRED_TASKS" ]
+  RUNNING_TASKS=$(aws ecs describe-tasks \
+    --tasks $(aws ecs list-tasks \
+              --service-name "$TARGET_GROUP" \
+              --cluster "$CLUSTER_NAME" \
+              --query 'taskArns[*]' \
+              --output text) \
+    --cluster "$CLUSTER_NAME" \
+    --query 'tasks[*].{def: taskDefinitionArn}' \
+    --output text)
+
+  set +e
+  ACTIVE_TASK_CHECK=$(echo "$RUNNING_TASKS" | grep -v "$ACTIVE_TASK")
+  set -e
+
+  if [ -z "$ACTIVE_TASK_CHECK" ] && [ -z "$HEALTH_CHECK" ] && [ "$RUNNING_COUNT" == "$DESIRED_COUNT" ]
   then
     exit 0
   fi
