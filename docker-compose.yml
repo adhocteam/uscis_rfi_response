@@ -9,7 +9,6 @@ services:
     command: bundle exec unicorn -p 3001
     volumes:
       - ./backend/:/myapp
-      - bundle:/bundle
     ports:
       - "3001:3001"
     depends_on:
@@ -26,9 +25,3 @@ services:
       - "3000:3000"
     depends_on:
       - backend
-
-# add a bundler cache data volume
-# https://engineering.adwerx.com/rails-on-docker-compose-7e2cf235fa0e
-volumes:
-  bundle:
-    driver: local
