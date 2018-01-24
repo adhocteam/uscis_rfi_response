@@ -194,12 +194,6 @@ RSpec.describe SubmissionsController, type: :request do
         body = JSON.parse(response.body)
         expect(body.length).to eq 0
       end
-
-      it 'returns all records when all are requested' do
-        get '/submissions/filters?status=all', headers: auth_headers
-        expect(response).to have_http_status(:success)
-        body = JSON.parse(response.body)
-        expect(body.length).to eq 1
     end
   end
 end

@@ -22,9 +22,14 @@ class Submissions extends React.Component {
   // filters submissions
   handleSubmit(event) {
     event.preventDefault();
-    UscisApiService.filterSubmissions(this.state.filter).then(s => {
-      this.setState({ submissions: s });
-    });
+    if (this.state.filter === "all") {
+      this.getSubmissions();
+    } else {
+      console.log("I am here!");
+      UscisApiService.filterSubmissions(this.state.filter).then(s => {
+        this.setState({ submissions: s });
+      });
+    }
   }
 
   getSubmissions = () => {

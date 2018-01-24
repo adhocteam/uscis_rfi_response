@@ -42,11 +42,7 @@ class SubmissionsController < ApplicationController
 
   def filter
     status = params.fetch('status')
-    if status == "all"
-      submissions = Submission.all
-    else
-      submissions = Submission.where(status: status)
-    end
+    submissions = Submission.where(status: status)
     render json: submissions
   end
 
