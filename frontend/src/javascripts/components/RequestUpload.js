@@ -1,7 +1,5 @@
 import React from "react";
 import UscisApiService from "../services/UscisApiService";
-// import TextField from "@cmsgov/design-system-core/dist/components/TextField/TextField";
-// import Button from "@cmsgov/design-system-core/dist/components/Button/Button";
 
 class RequestUpload extends React.Component {
   constructor(props) {
@@ -35,7 +33,9 @@ class RequestUpload extends React.Component {
     });
   }
 
+  // sends user information, displays, text, and clears form
   handleSubmit(event) {
+    event.preventDefault();
     UscisApiService.createUser(
       this.state.name,
       this.state.dob,
@@ -45,7 +45,21 @@ class RequestUpload extends React.Component {
       this.state.city,
       this.state.state,
       this.state.zip
-    );
+    ).then(resp => {
+      let email = this.state.email;
+      this.setState({
+        userID: resp.id,
+        emailText: email,
+        name: "",
+        dob: "",
+        street1: "",
+        street2: "",
+        city: "",
+        state: "",
+        zip: "",
+        email: "",
+      });
+    });
   }
 
   render() {
@@ -54,11 +68,12 @@ class RequestUpload extends React.Component {
 
     return admin ? (
       <div className="ds-l-container ds-u-padding-top--3 ds-u-sm-text-align--center ds-u-sm-text-align--left">
-        <h2> photo upload request </h2>
-        <p> This form creates and sends a user a link to upload a photo.</p>
+        <h2> Request Upload </h2>
+        <p> Please enter a user's information to generate an upload code.</p>
         <form onSubmit={this.handleSubmit}>
           <label>
             Name:
+            <br />
             <input
               name="name"
               type="text"
@@ -69,6 +84,7 @@ class RequestUpload extends React.Component {
           <br />
           <label>
             DOB:
+            <br />
             <input
               name="dob"
               type="text"
@@ -79,6 +95,7 @@ class RequestUpload extends React.Component {
           <br />
           <label>
             Email:
+            <br />
             <input
               name="email"
               type="text"
@@ -89,6 +106,7 @@ class RequestUpload extends React.Component {
           <br />
           <label>
             Street 1:
+            <br />
             <input
               name="street1"
               type="text"
@@ -99,6 +117,7 @@ class RequestUpload extends React.Component {
           <br />
           <label>
             Street 2:
+            <br />
             <input
               name="street2"
               type="text"
@@ -109,6 +128,7 @@ class RequestUpload extends React.Component {
           <br />
           <label>
             City:
+            <br />
             <input
               name="city"
               type="text"
@@ -119,6 +139,7 @@ class RequestUpload extends React.Component {
           <br />
           <label>
             State:
+            <br />
             <input
               name="state"
               type="text"
@@ -129,6 +150,7 @@ class RequestUpload extends React.Component {
           <br />
           <label>
             Zip:
+            <br />
             <input
               name="zip"
               type="text"
@@ -136,9 +158,23 @@ class RequestUpload extends React.Component {
               onChange={this.handleChange}
             />
           </label>
-
+          <br />
           <input type="submit" value="Submit" />
         </form>
+        {this.state.userID ? (
+          <div>
+            {" "}
+            <h2> User created! </h2>
+            <p>
+              {" "}
+              Please send this id to {this.state.emailText} to upload at{" "}
+              http://uscis-rfds.adhocteam.us.s3-website-us-east-1.amazonaws.com/
+            </p>
+            <pre> {this.state.userID} </pre>
+          </div>
+        ) : (
+          <div> </div>
+        )}
       </div>
     ) : (
       <p>No admin found!</p>
