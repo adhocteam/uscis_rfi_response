@@ -25,7 +25,7 @@ resource "aws_subnet" "main" {
 }
 
 resource "aws_subnet" "app" {
-  count             = "${var.az_count}"
+  count             = "${var.with_app ? var.az_count : 0}"
   cidr_block        = "${cidrsubnet(aws_vpc.main.cidr_block, 8, count.index + 2)}"
   availability_zone = "${data.aws_availability_zones.available.names[count.index]}"
   vpc_id            = "${aws_vpc.main.id}"
@@ -36,7 +36,7 @@ resource "aws_subnet" "app" {
 }
 
 resource "aws_subnet" "data" {
-  count             = "${var.az_count}"
+  count             = "${var.with_data ? var.az_count : 0}"
   cidr_block        = "${cidrsubnet(aws_vpc.main.cidr_block, 8, count.index + 4)}"
   availability_zone = "${data.aws_availability_zones.available.names[count.index]}"
   vpc_id            = "${aws_vpc.main.id}"
@@ -78,10 +78,12 @@ resource "aws_route_table_association" "a" {
 # TODO(rnagle): gateways for each AZ, separate route tables for each app subnet
 
 resource "aws_eip" "eip" {
+  count = "${var.with_app ? 1 : 0}"
   vpc   = true
 }
 
 resource "aws_nat_gateway" "dmz" {
+  count = "${var.with_app ? 1 : 0}"
   allocation_id = "${aws_eip.eip.id}"
   subnet_id     = "${element(aws_subnet.main.*.id, 0)}"
 
@@ -89,6 +91,7 @@ resource "aws_nat_gateway" "dmz" {
 }
 
 resource "aws_route_table" "app_r" {
+  count = "${var.with_app ? 1 : 0}"
   vpc_id = "${aws_vpc.main.id}"
 
   route {
@@ -102,7 +105,7 @@ resource "aws_route_table" "app_r" {
 }
 
 resource "aws_route_table_association" "b" {
-  count          = "${var.az_count}"
+  count          = "${var.with_app ? var.az_count : 0}"
   subnet_id      = "${element(aws_subnet.app.*.id, count.index)}"
   route_table_id = "${aws_route_table.app_r.id}"
 }
