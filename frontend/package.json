@@ -4,12 +4,41 @@
   "private": true,
   "scripts": {
     "build": "NODE_ENV=production ./node_modules/.bin/webpack -p --config webpack.config.js",
-    "server": "NODE_ENV=development ./node_modules/.bin/webpack-dev-server"
+    "server": "NODE_ENV=development ./node_modules/.bin/webpack-dev-server",
+    "unit-test": "jest",
+    "e2e-test": "./node_modules/.bin/nightwatch --env chrome-headless",
+    "test": "yarn unit-test && yarn e2e-test"
+  },
+  "jest": {
+    "testMatch": [
+      "**/spec/unit/**/?(*.spec|*_spec).js?(x)"
+    ],
+    "roots": [
+      "<rootDir>/src/javascripts",
+      "<rootDir>/spec/unit"
+    ],
+    "modulePaths": [
+      "<rootDir>/src/stylesheets"
+    ],
+    "moduleNameMapper": {
+      "^components/(.*)$": "<rootDir>/src/javascripts/components/$1",
+      "^services/(.*)$": "<rootDir/src/javascripts/services/$1",
+      "^test-data/(.*)$": "<rootDir>/spec/unit/test-data/$1"
+    },
+    "setupFiles": [
+      "<rootDir>/spec/unit/jest.environment-setup.js"
+    ],
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
+    ]
   },
   "babel": {
     "presets": [
       "react-app"
     ]
+  },
+  "prettier": {
+    "trailingComma": "es5"
   },
   "dependencies": {
     "@cmsgov/design-system-core": "^1.10.0",
@@ -29,14 +58,21 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-react-app": "^3.1.1",
     "babel-runtime": "6.26.0",
+    "chromedriver": "^2.35.0",
     "clean-webpack-plugin": "^0.1.17",
     "css-loader": "0.28.7",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "enzyme-to-json": "^3.3.1",
     "extract-text-webpack-plugin": "3.0.2",
     "file-loader": "1.1.5",
     "html-webpack-plugin": "2.29.0",
+    "jest": "^22.1.4",
+    "nightwatch": "^0.9.19",
     "postcss-loader": "2.0.8",
     "react-dev-utils": "^5.0.0",
     "sass-loader": "^6.0.6",
+    "selenium-server-standalone-jar": "^3.8.1",
     "webpack": "3.8.1",
     "webpack-dev-server": "2.9.4"
   }

@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders 1`] = `
+<Router
+  history={
+    Object {
+      "action": "POP",
+      "block": [Function],
+      "createHref": [Function],
+      "go": [Function],
+      "goBack": [Function],
+      "goForward": [Function],
+      "length": 1,
+      "listen": [Function],
+      "location": Object {
+        "hash": "",
+        "pathname": "blank",
+        "search": "",
+        "state": undefined,
+      },
+      "push": [Function],
+      "replace": [Function],
+    }
+  }
+>
+  <div>
+    <div
+      className="ds-u-fill--primary-darkest"
+    >
+      <div
+        className="ds-l-container ds-u-md-padding-top--1"
+      >
+        <div
+          className="ds-l-row"
+        >
+          <div
+            className="ds-l-col"
+          >
+            <h1
+              className="ds-u-serif ds-u-color--white ds-u-font-size--h2 ds-u-md-font-size--h1 ds-u-font-weight--normal ds-u-margin-top--3 ds-u-margin-bottom--3"
+              id="main"
+            >
+              USCIS RFDS Front-End
+            </h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    <Switch>
+      <Route
+        component={[Function]}
+        exact={true}
+        path="/login"
+      />
+      <Route
+        component={[Function]}
+        path="/review"
+      />
+      <Route
+        component={[Function]}
+        exact={true}
+        path="/"
+      />
+    </Switch>
+  </div>
+</Router>
+`;
