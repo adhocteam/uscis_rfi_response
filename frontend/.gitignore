@@ -5,6 +5,8 @@
 
 # testing
 /coverage
+/nightwatch-logs
+selenium-debug.log
 
 # production
 /build

@@ -87,11 +87,11 @@ class UploadPage extends React.Component {
 
   render() {
     return (
-      <div className="ds-l-container ds-u-padding-top--3 ds-u-sm-text-align--center ds-u-sm-text-align--left">
+      <div className="ds-l-container ds-u-padding-top--3 ds-u-sm-text-align--center ds-u-sm-text-align--left qa-uscis-upload-page">
         <p>
           Fill out your provided UUID and select your image, then hit submit.
         </p>
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.handleSubmit} className="qa-uscis-upload-form">
           <TextField
             label="UUID"
             name="uuid"
