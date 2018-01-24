@@ -12,25 +12,26 @@ ENV=${1}
 TAG=${2:-latest}
 
 # Pull config vars from s3 before build
-pushd ../config
-./fetch.sh $ENV
-popd
+pushd ../config && ./fetch.sh $ENV && popd
 
 pushd ../../backend
 
-# Produce a Dockerfile.$ENV file with env vars embedded
-vars=$'\n'"# Environment variables"$'\n'
-for v in $(cat ../ops/config/$ENV/env);
-do
-  vars="${vars}ENV $v"$'\n'
-done
+# Copy the env file from ops/config
+cp ../ops/config/$ENV/env .env
 
-echo "$(cat Dockerfile)"$'\n'"$vars" > Dockerfile.$ENV
+ls -al
+
+cat .env
+
+# Add CMD directive to the Dockerfile
+CMD="CMD /bin/bash -c 'source .env && bundle exec unicorn -c config/unicorn.rb'"
+echo "$(cat Dockerfile)"$'\n'"$CMD" > Dockerfile.$ENV
 
 # Build an image for the specified env
 docker build -f Dockerfile.$ENV -t uscis-backend:$ENV-$TAG .
 
 # Clean up
 rm Dockerfile.$ENV
+rm .env
 
 popd
