@@ -59,7 +59,7 @@ module "uscis_backend" {
 
   service_version = "${var.service_version}"
   task_count      = 2
-  asg_desired     = 2
+  asg_desired     = 1
   ami_id          = "ami-28456852"
 }
 
