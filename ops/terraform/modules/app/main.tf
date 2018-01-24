@@ -2,6 +2,10 @@ provider "aws" {
   region = "us-east-1"
 }
 
+data "aws_vpc" "main" {
+  id = "${var.vpc_id}"
+}
+
 ## EC2
 
 ### Compute
@@ -86,8 +90,10 @@ resource "aws_security_group" "instance_sg" {
     from_port = 22
     to_port   = 22
 
+    # Allow access from bastion(s) in the DMZ subnets
     cidr_blocks = [
-      "${var.admin_cidr_ingress}",
+      "${cidrsubnet(data.aws_vpc.main.cidr_block, 8, 0)}",
+      "${cidrsubnet(data.aws_vpc.main.cidr_block, 8, 1)}"
     ]
   }
 
