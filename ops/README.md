@@ -1,19 +1,74 @@
 ## Deployment infrastructure
 
-NOTE: At present, the included infrastructure configurations are tightly coupled to Ad Hoc's AWS account.
+### Security overview
+
+#### IAM users, roles and policies
+
+- Ad Hoc adheres to the [Principal of Least Privilege](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#grant-least-privilege) regarding IAM users, roles and related policies. Engineers and AWS resources are granted only the privileges required to perform their duties and no more.
+
+#### At the network level
+
+- For the backend app:
+  -  EC2 instances and RDS servers reside in private VPC subnets
+    - They can not be accessed directly via the public internet
+    - Clients or end users access the application via the Application Load Balancer (ALB)
+    - When required, admin access to application and database servers is facilitated by a "bastion" server deployed in a public or "DMZ" subnet
+  - The Application Load Balancer uses TLS to secure communication between the application and end users
+  - Security groups are used to manage communication between AWS resources
+    - The public internet can make https requests to the ALB
+    - Only the ALB is allowed to make requests to application servers
+    - Only application servers are granted access to the database server
+    - SSH access to EC2 instances is allowed for team members who possess the appropriate instance key pair
+- For the frontend app:
+  - The Cloudfront distribution uses TLS to secure communication between the application and end users
+
+#### Configuration management
+
+- All configuration variables used by AWS resources are stored in an S3 bucket and secured at rest using KMS encryption
+- Terraform state files are also stored in an S3 bucket an secured at rest using KMS encryption
+- Only the Jenkins CI server and a subset of Ad Hoc engineers have access to the KMS key required encrypt and decrypt configuration variables and Terrform state files
+
+#### Jenkins
+
+- Jenkins is deployed to its own VPC
+- An Elastic Load Balancer (ELB) is used to proxy requests to the Jenkins backend
+- The ELB uses TLS to secure communication between Jenkins and end users/engineers
+- Security groups are used to manage communication between AWS resources
+  - The public internet can make requests to the ELB
+  - Only the ELB is allowed to make requests to the Jenkins server
+  - When SSH access to the Jenkins is requried, only team members who possess the appropriate instance key pair are allowed access
+- Access to the Jenkins CI/CD server requires a valid username and password
 
 ### Steps to bring up infrastructure:
 
-1. Apply the `global` configurations:
+NOTE: At present, the included infrastructure configurations are tightly coupled to Ad Hoc's AWS account.
+
+1. Apply the `bootstrap` configurations:
+
+```
+cd ops/terraform/bootstrap
+terraform init && terraform apply
+```
+
+This creates the s3 bucket and dynamo db table used to store terraform state. The configurations for these resource will not be stored in remote Terraform state.
+
+2. Apply the `global` configurations:
 
 ```
 cd ops/terraform/global
 terraform init && terraform apply
 ```
 
-This creates the s3 bucket and dynamo db table used to store terraform state.
+This will create the S3 bucket KMS key and related policy to be used for storage of configuration variables and encryption of any sensitive information.
 
-2. Apply the Elastic Container Registry configurations:
+3. Provision the VPC
+
+```
+cd ops/terraform/<env>/vpc
+terraform init && terraform apply
+```
+
+4. Apply the Elastic Container Registry configurations:
 
 ```
 cd ops/terraform/<env>/ecr
@@ -22,29 +77,32 @@ terraform init && terraform apply
 
 This will create an ECR to store docker images for the application.
 
-3. Build and push the initial docker image to ECR:
+5. Build and push the initial docker image to ECR:
 
 ```
-cd ops
-./backend-release.sh <env> <version:-latest>
+cd ops/scripts
+./backend-release.sh <env> <version>
 ```
 
-4. Apply the backend application configurations:
+The `<env>`argument is required. If `<version>` is omitted, the first 12 characters of the most recent commit hash on the `master` branch will be used.
+
+6. Apply the backend application configurations:
 
 ```
 cd ops/terraform/<env>/backend
-terraform init && terraform apply -var 'db_password=<your-password-here>'
+terraform init && terraform apply -var service_version=<version> -var 'db_password=<your-password-here>'
 ```
 
-The value for `db_password` is used for the admin user (i.e., `uscis`) of the postgres database brought up for the backend app.
+The value for `<version>` should match what was used in step 4. The value for `db_password` is used for the admin user (i.e., `uscis`) of the postgres database brought up for the backend app.
 
-
-5. Apply the frontend application configurations:
+7. Apply the frontend application configurations:
 
 ```
 cd ops/terraform/<env>/frontend
 terraform init && terraform apply
 ```
+
+This step creates the S3 bucket and Cloudfront distribution for the front end application.
 
 ### Setting up the RDS database
 
@@ -75,7 +133,7 @@ ssh -i /path/to/key.pem ec2-user@<ip-of-ec2-instance>
 docker run --rm \
     -it --name uscis-db-setup\
     <aws-account-id>.dkr.ecr.<aws-region>.amazonaws.com/<repo-or-image-name>:<version-tag> \
-    bundle exec rake db:drop db:create db:migrate`
+    bundle exec rake db:drop db:create db:migrate
 ```
 
 Be sure to fill in the appropriate values for `<aws-account-id>`, `<aws-region>`, `<repo-or-image-name>` and `<version-tag>`.
@@ -111,7 +169,7 @@ Convenience for deploying a new image to ECS:
 
 ```
 cd ops/scripts
-./deploy.sh <env> <version>
+./backend-deploy.sh <env> <version>
 ```
 
 The only possible value for <env> is `dev` at the moment.
