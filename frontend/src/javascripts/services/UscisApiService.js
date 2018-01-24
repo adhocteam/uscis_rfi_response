@@ -52,9 +52,9 @@ const UscisApiService = {
     });
   },
 
-  filterSubmissions: filter => {
+  filterSubmissions: status => {
     return authedRequest(
-      `submissions/status?filter=${filter}`,
+      `submissions/filter?status=${status}`,
       {},
       "Failed to get submissions."
     );
