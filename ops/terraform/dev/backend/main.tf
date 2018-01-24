@@ -58,8 +58,8 @@ module "uscis_backend" {
   app_subnet_ids = ["${data.aws_subnet_ids.uscis_app_subnet_ids.ids}"]
 
   service_version = "${var.service_version}"
-  task_count      = 1
-  asg_desired     = 1
+  task_count      = 2
+  asg_desired     = 2
   ami_id          = "ami-28456852"
 }
 
