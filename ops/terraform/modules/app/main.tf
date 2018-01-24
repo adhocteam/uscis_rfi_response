@@ -2,13 +2,17 @@ provider "aws" {
   region = "us-east-1"
 }
 
+data "aws_vpc" "main" {
+  id = "${var.vpc_id}"
+}
+
 ## EC2
 
 ### Compute
 
 resource "aws_autoscaling_group" "app" {
   name                 = "tf-${var.container_name}-asg"
-  vpc_zone_identifier  = ["${var.subnet_ids}"]
+  vpc_zone_identifier  = ["${var.app_subnet_ids}"]
   min_size             = "${var.asg_min}"
   max_size             = "${var.asg_max}"
   desired_capacity     = "${var.asg_desired}"
@@ -34,14 +38,12 @@ resource "aws_launch_configuration" "app" {
     "${aws_security_group.instance_sg.id}",
   ]
 
-  key_name             = "${var.key_name}"
-  image_id             = "${var.ami_id}"                         # ECS optimized AWS Linux
-  instance_type        = "${var.instance_type}"
-  iam_instance_profile = "${aws_iam_instance_profile.app.name}"
-  user_data            = "${data.template_file.user_data.rendered}"
-
-  # TODO(rnagle): do not assign public IP addresses
-  associate_public_ip_address = true
+  key_name                    = "${var.key_name}"
+  image_id                    = "${var.ami_id}"                         # ECS optimized AWS Linux
+  instance_type               = "${var.instance_type}"
+  iam_instance_profile        = "${aws_iam_instance_profile.app.name}"
+  user_data                   = "${data.template_file.user_data.rendered}"
+  associate_public_ip_address = false
 
   lifecycle {
     create_before_destroy = true
@@ -88,11 +90,14 @@ resource "aws_security_group" "instance_sg" {
     from_port = 22
     to_port   = 22
 
+    # Allow access from bastion(s) in the DMZ subnets
     cidr_blocks = [
-      "${var.admin_cidr_ingress}",
+      "${cidrsubnet(data.aws_vpc.main.cidr_block, 8, 0)}",
+      "${cidrsubnet(data.aws_vpc.main.cidr_block, 8, 1)}"
     ]
   }
 
+  # Allow ECS to manage port assignment for running containers
   ingress {
     protocol  = "tcp"
     from_port = 32768
@@ -264,7 +269,7 @@ resource "aws_alb_target_group" "main" {
 
 resource "aws_alb" "main" {
   name            = "tf-${var.container_name}-alb-ecs"
-  subnets         = ["${var.subnet_ids}"]
+  subnets         = ["${var.dmz_subnet_ids}"]
   security_groups = ["${aws_security_group.lb_sg.id}"]
 
   tags {
