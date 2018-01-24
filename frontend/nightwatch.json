@@ -1,0 +1,42 @@
+{
+  "src_folders": ["spec/end-to-end/tests"],
+  "output_folder": "nightwatch-logs",
+  "custom_commands_path": "",
+  "custom_assertions_path": "",
+  "page_objects_path": "spec/end-to-end/page-objects/",
+  "globals_path": "spec/end-to-end/globals.js",
+  "selenium": {
+    "start_process": true,
+    "server_path": "node_modules/selenium-server-standalone-jar/jar/selenium-server-standalone-3.8.1.jar",
+    "log_path": "",
+    "port": 4444,
+    "cli_args": {
+      "webdriver.chrome.driver": "node_modules/.bin/chromedriver"
+    }
+  },
+  "test_settings": {
+    "default": {
+      "launch_url": "http://localhost:3000",
+      "selenium_port": 4444,
+      "selenium_host": "localhost",
+      "silent": true,
+      "screenshots": {
+        "enabled": false,
+        "path": ""
+      },
+      "desiredCapabilities": {
+        "browserName": "chrome"
+      }
+    },
+    "chrome-headless": {
+      "desiredCapabilities": {
+        "browserName": "chrome",
+        "javascriptEnabled": true,
+        "acceptSslCerts": true,
+        "chromeOptions": {
+          "args": ["headless", "window-size=1920,1080"]
+        }
+      }
+    }
+  }
+}
