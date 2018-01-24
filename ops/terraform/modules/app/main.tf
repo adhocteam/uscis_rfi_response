@@ -21,20 +21,24 @@ resource "aws_autoscaling_group" "app" {
   }
 }
 
+data "template_file" "user_data" {
+  template = "${file("${path.module}/templates/userdata")}"
+
+  vars {
+    cluster_name = "${aws_ecs_cluster.main.name}"
+  }
+}
+
 resource "aws_launch_configuration" "app" {
   security_groups = [
     "${aws_security_group.instance_sg.id}",
   ]
 
   key_name             = "${var.key_name}"
-  image_id             = "ami-28456852"                         # ECS optimized AWS Linux
+  image_id             = "${var.ami_id}"                         # ECS optimized AWS Linux
   instance_type        = "${var.instance_type}"
   iam_instance_profile = "${aws_iam_instance_profile.app.name}"
-
-  user_data = <<EOF
-#!/bin/bash
-echo ECS_CLUSTER=${aws_ecs_cluster.main.name} >> /etc/ecs/ecs.config
-EOF
+  user_data            = "${data.template_file.user_data.rendered}"
 
   # TODO(rnagle): do not assign public IP addresses
   associate_public_ip_address = true
@@ -125,6 +129,7 @@ data "template_file" "task_definition" {
     image_url      = "${var.ecr_img_url}:${var.env}-${var.service_version}"
     container_name = "${var.container_name}"
     container_port = "${var.container_port}"
+    log_group_name = "${aws_cloudwatch_log_group.app.name}"
   }
 }
 
@@ -250,7 +255,7 @@ resource "aws_alb_target_group" "main" {
   port                 = 80
   protocol             = "HTTP"
   vpc_id               = "${var.vpc_id}"
-  deregistration_delay = 60
+  deregistration_delay = 30
 
   tags {
     Name = "ecs-${var.container_name}"
@@ -278,4 +283,8 @@ resource "aws_alb_listener" "front_end" {
     target_group_arn = "${aws_alb_target_group.main.id}"
     type             = "forward"
   }
+}
+
+resource "aws_cloudwatch_log_group" "app" {
+  name = "${var.container_name}.log"
 }

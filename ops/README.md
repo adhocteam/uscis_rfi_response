@@ -106,6 +106,28 @@ cd ops/scripts
 
 The only possible value for <env> is `dev` at the moment.
 
+### Rotating ECS container instances
+
+When a new AWS Linux AMI is released, it is possible to bring new container instances into service to replace the old with zero downtime.
+
+To do this manually:
+
+1. Update the `image_id` attribute using the ID of the latest AWS Linux AMI (ECS-optimized)
+2. Double the value for `asg_desired` attribute of the application's app module
+3. Apply the changes (modifying `<version>` and `<db_password>` with the appropriate values):
+
+```
+cd ops/terraform/dev/backend
+terraform apply -var service_version=<version> -var db_password=<db_password>
+```
+
+4. Wait for the autoscaling group to launch a new instances using the updated AMI ID
+5. When the instances are healthy, double the value of `task_count` attribute of the applications app module
+6. Apply the changes by rerunning the `terraform apply` command from step 3 above
+7. When the ECS service "Desired count" matches the value for `task_count` and all tasks and instances are healthy, reverse the process: restore the original value for `task_count` and apply changes; restore the original value for `asg_desired` and apply changes. ECS will remove the old tasks and the autoscaling group will remove the old ec2 instances.
+
+TODO: automate this process.
+
 ## Jenkins
 
 ### Terraform
