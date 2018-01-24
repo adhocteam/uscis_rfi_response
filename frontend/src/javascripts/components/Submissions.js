@@ -25,7 +25,6 @@ class Submissions extends React.Component {
     if (this.state.filter === "all") {
       this.getSubmissions();
     } else {
-      console.log("I am here!");
       UscisApiService.filterSubmissions(this.state.filter).then(s => {
         this.setState({ submissions: s });
       });
