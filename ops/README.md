@@ -1,5 +1,7 @@
 ## Deployment infrastructure
 
+NOTE: At present, the included infrastructure configurations are tightly coupled to Ad Hoc's AWS account.
+
 ### Steps to bring up infrastructure:
 
 1. Apply the `global` configurations:
@@ -35,6 +37,14 @@ terraform init && terraform apply -var 'db_password=<your-password-here>'
 ```
 
 The value for `db_password` is used for the admin user (i.e., `uscis`) of the postgres database brought up for the backend app.
+
+
+5. Apply the frontend application configurations:
+
+```
+cd ops/terraform/<env>/frontend
+terraform init && terraform apply
+```
 
 ### Setting up the RDS database
 
