@@ -8,22 +8,28 @@ class Login extends React.Component {
 
   login = e => {
     e.preventDefault();
-    UscisApiService
-      .login(this.state.email, this.state.password)
+    UscisApiService.login(this.state.email, this.state.password)
       .then(this.redirect)
-      .catch(err => { console.error(err); });
+      .catch(err => {
+        console.error(err);
+      });
   };
 
   redirect = () => {
     const queryParams = new URLSearchParams(this.props.location.search);
-    history.replace(queryParams.get("next"));
+    let nextPage = queryParams.get("next");
+    if (nextPage) {
+      history.replace(queryParams.get("next"));
+    } else {
+      history.replace("review");
+    }
   };
 
   handleEmailChange = e => this.setState({ email: e.target.value });
   handlePasswordChange = e => this.setState({ password: e.target.value });
 
   render() {
-    return  (
+    return (
       <div className="login">
         <h2>Login</h2>
         <p>Please enter your email and password</p>
