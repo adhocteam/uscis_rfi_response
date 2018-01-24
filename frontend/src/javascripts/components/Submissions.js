@@ -6,7 +6,7 @@ import UscisApiService from "../services/UscisApiService";
 class Submissions extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { submissions: null, filter: "submitted" };
+    this.state = { submissions: null, filter: "all" };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
@@ -58,6 +58,7 @@ class Submissions extends React.Component {
           <label>
             Submission status
             <select value={this.state.filter} onChange={this.handleChange}>
+              <option value="all">All</option>
               <option value="requested">Requested</option>
               <option value="submitted">Submitted</option>
               <option value="approved">Approved</option>
