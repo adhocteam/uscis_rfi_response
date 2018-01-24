@@ -17,12 +17,7 @@ class Login extends React.Component {
 
   redirect = () => {
     const queryParams = new URLSearchParams(this.props.location.search);
-    let nextPage = queryParams.get("next");
-    if (nextPage) {
-      history.replace(queryParams.get("next"));
-    } else {
-      history.replace("review");
-    }
+    history.replace(queryParams.get("next") || "review");
   };
 
   handleEmailChange = e => this.setState({ email: e.target.value });
