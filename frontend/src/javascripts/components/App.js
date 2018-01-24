@@ -5,6 +5,7 @@ import history from "../history";
 import AdminPage from "./AdminPage";
 import LoginPage from "./LoginPage";
 import UploadPage from "./UploadPage";
+import RequestUpload from "./RequestUpload";
 
 export default function App() {
   return (
@@ -27,6 +28,7 @@ export default function App() {
         <Switch>
           <Route path="/login" exact component={LoginPage} />
           <Route path="/review" component={AdminPage} />
+          <Route path="/request" component={RequestUpload} />
           <Route path="/" exact component={UploadPage} />
         </Switch>
       </div>

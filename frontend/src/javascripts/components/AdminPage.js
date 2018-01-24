@@ -13,10 +13,13 @@ class AdminPage extends React.Component {
   }
 
   getAdmin = () => {
-    UscisApiService
-      .getAdmin()
-      .then(admin => { this.setState({ admin }) })
-      .catch(err => { console.error(err); });
+    UscisApiService.getAdmin()
+      .then(admin => {
+        this.setState({ admin });
+      })
+      .catch(err => {
+        console.error(err);
+      });
   };
 
   render() {
@@ -28,13 +31,16 @@ class AdminPage extends React.Component {
         <p>
           Hello, {admin.name || admin.email}!&nbsp;
           <Link to={url}>View all submissions</Link>
+          <Link to={`/request`}>Request a submission</Link>
         </p>
         <Switch>
           <Route path={`${url}/:id`} component={Submission} />
           <Route path={`${url}`} component={Submissions} />
         </Switch>
       </div>
-    ) : <p>No admin found!</p>;
+    ) : (
+      <p>No admin found!</p>
+    );
   }
 }
 
