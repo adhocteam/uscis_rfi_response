@@ -21,4 +21,6 @@
     submission.customer = customer
 
     submission.save
+    submission.status = %i(requested submitted approved denied).sample
+    submission.save
 end
