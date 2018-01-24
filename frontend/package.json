@@ -22,12 +22,13 @@
     ],
     "moduleNameMapper": {
       "^components/(.*)$": "<rootDir>/src/javascripts/components/$1",
-      "^services/(.*)$": "<rootDir/src/javascripts/services/$1",
+      "^services/(.*)$": "<rootDir>/src/javascripts/services/$1",
       "^test-data/(.*)$": "<rootDir>/spec/unit/test-data/$1"
     },
     "setupFiles": [
       "<rootDir>/spec/unit/jest.environment-setup.js"
     ],
+    "setupTestFrameworkScriptFile": "mock-local-storage",
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
     ]
@@ -68,6 +69,7 @@
     "file-loader": "1.1.5",
     "html-webpack-plugin": "2.29.0",
     "jest": "^22.1.4",
+    "mock-local-storage": "^1.0.5",
     "nightwatch": "^0.9.19",
     "postcss-loader": "2.0.8",
     "react-dev-utils": "^5.0.0",
