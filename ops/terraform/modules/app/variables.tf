@@ -28,10 +28,6 @@ variable "key_name" {
   description = "Name of AWS key pair"
 }
 
-variable "admin_cidr_ingress" {
-  description = "CIDR to allow tcp/22 ingress to EC2 instance"
-}
-
 variable "container_port" {
   default = "3000"
 }

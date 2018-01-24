@@ -44,9 +44,6 @@ module "uscis_backend" {
 
   env = "dev"
 
-  # TODO(rnagle): lock this down
-  admin_cidr_ingress = "0.0.0.0/0"
-
   # TODO(rnagle): allow setting a different key
   key_name = "ecs"
 
@@ -58,7 +55,7 @@ module "uscis_backend" {
   app_subnet_ids = ["${data.aws_subnet_ids.uscis_app_subnet_ids.ids}"]
 
   service_version = "${var.service_version}"
-  task_count      = 2
+  task_count      = 1
   asg_desired     = 1
   ami_id          = "ami-28456852"
 }
