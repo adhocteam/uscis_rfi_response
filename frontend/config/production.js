@@ -1,3 +1,3 @@
 module.exports = {
-  BASE_URL: JSON.stringify("https://uscis-rfds.adhocteam.us"),
+  BASE_URL: '"https://uscis-rfds.adhocteam.us"',
 };

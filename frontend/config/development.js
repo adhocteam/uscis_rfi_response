@@ -1,3 +1,3 @@
 module.exports = {
-  BASE_URL: JSON.stringify("http://localhost:3000"),
+  BASE_URL: '"http://localhost:3000"',
 };
