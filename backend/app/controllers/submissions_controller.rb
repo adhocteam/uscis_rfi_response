@@ -51,13 +51,10 @@ class SubmissionsController < ApplicationController
   def new_upload
     existing = Customer.find_by(email: params.fetch("email"))
     if existing
-      puts 'i am here'
       submission = Submission.create(status: "requested", customer_id: existing.id)
-      puts submission.id
       render json: {'status': 'ok', 'id': submission.id }, status: :ok 
       return
     end
-    puts params
     customer =Customer.create(name: params.fetch("name"), dob: params.fetch("dob"),
       email:  params.fetch("email"), street1: params.fetch("street1"),
       street2: params.fetch("street2"), city: params.fetch("city"),
