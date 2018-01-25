@@ -1,7 +1,21 @@
 import history from "./history";
 
-const authedRequest = (url, settings, error) =>
-  fetch(url, {
+const updateIfPresent = (headers, headerName, sessionName) => {
+  const val = headers.get(headerName);
+  if (val) {
+    sessionStorage.setItem(sessionName, val);
+  }
+};
+
+const updateTokens = headers => {
+  updateIfPresent(headers, "access-token", "token");
+  updateIfPresent(headers, "expiry", "expiry");
+  updateIfPresent(headers, "uid", "uid");
+  updateIfPresent(headers, "client", "client");
+};
+
+const authedRequest = (path, settings, error) =>
+  fetch(`${BASE_URL}${path}`, {
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
@@ -13,14 +27,7 @@ const authedRequest = (url, settings, error) =>
     ...settings,
   }).then(resp => {
     if (resp.ok) {
-      let token = resp.headers.get("access-token");
-      let expiry = resp.headers.get("expiry");
-      if (token) {
-        sessionStorage.setItem("token", token);
-      }
-      if (expiry) {
-        sessionStorage.setItem("expiry", expiry);
-      }
+      updateTokens(resp.headers);
       return resp.json();
     }
     if (resp.status === 401) {
@@ -34,7 +41,7 @@ const UscisApiService = {
 
   // TODO: error handling
   getSignedUrl: (user_id, image_name, image_type) => {
-    return fetch("/submissions/presigned_url", {
+    return fetch(`${BASE_URL}/submissions/presigned_url`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -54,7 +61,7 @@ const UscisApiService = {
 
   filterSubmissions: status => {
     return authedRequest(
-      `submissions/filter?status=${status}`,
+      `/submissions/filter?status=${status}`,
       {},
       "Failed to get submissions."
     );
@@ -67,7 +74,7 @@ const UscisApiService = {
     authedRequest("/submissions", {}, "Failed to get submissions."),
 
   login: (email, password) => {
-    return fetch("/auth/sign_in", {
+    return fetch(`${BASE_URL}/auth/sign_in`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -79,10 +86,7 @@ const UscisApiService = {
       }),
     }).then(resp => {
       if (resp.ok) {
-        sessionStorage.setItem("token", resp.headers.get("access-token"));
-        sessionStorage.setItem("client", resp.headers.get("client"));
-        sessionStorage.setItem("uid", resp.headers.get("uid"));
-        sessionStorage.setItem("expiry", resp.headers.get("expiry"));
+        updateTokens(resp.headers);
         return resp.json();
       } else {
         throw new Error("Failed to log in.");
