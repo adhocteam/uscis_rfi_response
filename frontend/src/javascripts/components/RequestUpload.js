@@ -155,7 +155,7 @@ class RequestUpload extends React.Component {
                   {this.state.emailText}
                 </a>{" "}
                 to submit their picture at{" "}
-                <a href={BASE_URL}>the upload tool</a>:
+                <a href={https://uscis-rfds.adhocteam.us/}>the upload tool</a>:
                 <pre> {this.state.userID} </pre>
               </div>
             </div>
