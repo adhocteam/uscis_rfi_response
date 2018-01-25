@@ -23,6 +23,7 @@
     "moduleNameMapper": {
       "^components/(.*)$": "<rootDir>/src/javascripts/components/$1",
       "^services/(.*)$": "<rootDir>/src/javascripts/services/$1",
+      "^helpers/(.*)$": "<rootDir>/src/javascripts/helpers/$1",
       "^test-data/(.*)$": "<rootDir>/spec/unit/test-data/$1"
     },
     "setupFiles": [
