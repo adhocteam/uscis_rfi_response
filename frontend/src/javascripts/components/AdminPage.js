@@ -32,7 +32,9 @@ class AdminPage extends React.Component {
         <Route path={`${url}`} component={Submissions} />
       </Switch>
     ) : (
-      <p>No admin found!</p>
+      <div className="ds-l-container">
+        <p>No admin found!</p>
+      </div>
     );
   }
 }

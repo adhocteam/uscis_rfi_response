@@ -48,17 +48,18 @@ class Submissions extends React.Component {
       submissions &&
       submissions.map(submission => (
         <tr key={`submission-${submission.id}`}>
-          <td>
+          <td className="ds-u-padding--1">
             <Link to={`${this.props.match.url}/${submission.id}`}>
               {submission.id}
             </Link>
           </td>
-          <td>{submission.status}</td>
+          <td className="ds-u-padding--1">{submission.status}</td>
         </tr>
       ));
 
     return submissions ? (
-      <div className=" ds-l-col--8 ds-u-padding-top--3 ds-u-sm-text-align--center ds-u-sm-text-align--left qa-uscis-upload-page">
+      <div className="ds-l-container qa-uscis-upload-page">
+        <h2>Review Submissions</h2>
         <form onSubmit={this.handleSubmit}>
           <label>
             <select
@@ -74,20 +75,23 @@ class Submissions extends React.Component {
             </select>
           </label>
 
-          <Button type="submit">Submit</Button>
+          <Button type="submit">Filter</Button>
         </form>
+        <br />
         <table className="ds-c-table">
           <thead>
             <tr>
-              <th>Submission</th>
-              <th>Status</th>
+              <th className="ds-u-padding--1">Submission</th>
+              <th className="ds-u-padding--1">Status</th>
             </tr>
           </thead>
           <tbody>{submissionRows}</tbody>
         </table>
       </div>
     ) : (
-      <p>No submissions found!</p>
+      <div className="ds-l-container">
+        <p>No submissions found!</p>
+      </div>
     );
   }
 }

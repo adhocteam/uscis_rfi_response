@@ -80,8 +80,8 @@ class RequestUpload extends React.Component {
     const { url } = this.props.match;
 
     return admin ? (
-      <div className="ds-l-container ds-u-margin--2 ds-u-sm-text-align--center ds-u-sm-text-align--left">
-        <h2> Request Upload </h2>
+      <div className="ds-l-container">
+        <h2>Request an Upload</h2>
         <p> Please enter a user's information to generate an upload code.</p>
         <form onSubmit={this.handleSubmit} className="qa-uscis-upload-form">
           <TextField
@@ -145,26 +145,27 @@ class RequestUpload extends React.Component {
             Submit
           </Button>
         </form>
+        <br />
         {this.state.userID && (
-          <div className="ds-l-col--6">
-            <div className="ds-c-alert ds-c-alert--success">
-              <div className="ds-c-alert__body">
-                <h3 className="ds-c-alert__heading">User created!</h3>
-                <p className="ds-c-alert__text" /> Please send the following
-                upload code to{" "}
-                <a href={`mailto:${this.state.emailText}`}>
-                  {this.state.emailText}
-                </a>{" "}
-                to submit their picture at{" "}
-                <Link to="/">the upload tool</Link>:
-                <pre> {this.state.userID} </pre>
-              </div>
+          <div className="ds-c-alert ds-c-alert--success ds-l-col--12 ds-l-md-col--6">
+            <div className="ds-c-alert__body">
+              <h3 className="ds-c-alert__heading">User created!</h3>
+              <p className="ds-c-alert__text" /> Please send the following
+              upload code to{" "}
+              <a href={`mailto:${this.state.emailText}`}>
+                {this.state.emailText}
+              </a>{" "}
+              to submit their picture at{" "}
+              <Link to="/">the upload tool</Link>:
+              <pre>{this.state.userID}</pre>
             </div>
           </div>
         )}
       </div>
     ) : (
-      <p>No admin found!</p>
+      <div className="ds-l-container">
+        <p>No admin found!</p>
+      </div>
     );
   }
 }
