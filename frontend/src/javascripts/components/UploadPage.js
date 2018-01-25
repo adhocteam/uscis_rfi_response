@@ -105,6 +105,7 @@ class UploadPage extends React.Component {
   render() {
     return (
       <div className="ds-l-container ds-u-padding-top--3 ds-u-sm-text-align--center ds-u-sm-text-align--left qa-uscis-upload-page">
+        <h2>Upload an Image</h2>
         <p>
           Fill out your provided upload code and select your image, then hit
           submit.
@@ -135,22 +136,16 @@ class UploadPage extends React.Component {
         </form>
         <br />
         {this.state.success && (
-          <div className="ds-l-col--6">
-            <div className="ds-c-alert ds-c-alert--success">
-              <div className="ds-c-alert__body">
-                <h3 className="ds-c-alert__heading">Upload succeeded!</h3>
-              </div>
+          <div className="ds-c-alert ds-c-alert--success ds-l-col--12 ds-l-md-col--6">
+            <div className="ds-c-alert__body">
+              <h3 className="ds-c-alert__heading">Upload succeeded!</h3>
             </div>
           </div>
         )}
         {this.state.error && (
-          <div className="ds-l-col--6">
-            <div className="ds-c-alert ds-c-alert--error">
-              <div className="ds-c-alert__body">
-                <h3 className="ds-c-alert__heading">
-                  {this.state.errorMessage}
-                </h3>
-              </div>
+          <div className="ds-c-alert ds-c-alert--error ds-l-col--12 ds-l-md-col--6">
+            <div className="ds-c-alert__body">
+              <h3 className="ds-c-alert__heading">{this.state.errorMessage}</h3>
             </div>
           </div>
         )}
