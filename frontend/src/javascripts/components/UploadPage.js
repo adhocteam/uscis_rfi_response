@@ -104,7 +104,7 @@ class UploadPage extends React.Component {
 
   render() {
     return (
-      <div className="ds-l-container ds-u-padding-top--3 ds-u-sm-text-align--center ds-u-sm-text-align--left qa-uscis-upload-page">
+      <div className="ds-l-container qa-uscis-upload-page">
         <h2>Upload an Image</h2>
         <p>
           Fill out your provided upload code and select your image, then hit

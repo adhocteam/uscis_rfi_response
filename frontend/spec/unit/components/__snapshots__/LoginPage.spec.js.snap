@@ -8,10 +8,7 @@ exports[`renders 1`] = `
     Login
   </h2>
   <p>
-    Please enter your email and password
-  </p>
-  <p>
-    You must log in to view the page
+    Please enter your email and password.
   </p>
   <form
     onSubmit={[Function]}
@@ -43,5 +40,6 @@ exports[`renders 1`] = `
       Submit
     </Button>
   </form>
+  <br />
 </div>
 `;
