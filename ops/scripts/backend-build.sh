@@ -19,10 +19,6 @@ pushd ../../backend
 # Copy the env file from ops/config
 cp ../ops/config/$ENV/env .env
 
-ls -al
-
-cat .env
-
 # Add CMD directive to the Dockerfile
 CMD="CMD /bin/bash -c 'source .env && bundle exec unicorn -c config/unicorn.rb'"
 echo "$(cat Dockerfile)"$'\n'"$CMD" > Dockerfile.$ENV
