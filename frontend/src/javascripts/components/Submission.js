@@ -34,7 +34,6 @@ class Submission extends React.Component {
       this.setState({ error: true });
       console.error(err);
     });
-    console.log("i am here");
     this.setState({ success: true });
   };
 
@@ -79,33 +78,30 @@ class Submission extends React.Component {
             <Button type="submit" variation="primary" value="Submit">
               Submit
             </Button>
-            {this.state.success ? (
+            {this.state.success && (
               <div>
-                <div class="ds-c-alert ds-c-alert--success">
-                  <div class="ds-c-alert__body">
-                    <h4 class="ds-c-alert__heading">Review Processed</h4>
+                <div className="ds-c-alert ds-c-alert--success">
+                  <div className="ds-c-alert__body">
+                    <h4 className="ds-c-alert__heading">Review Processed</h4>
                     <p>
-                      {" "}
-                      Head over to <Link to={`/review`}> submissions</Link> to
+                      Head over to <Link to={`/review`}>submissions</Link> to
                       review another submission.
                     </p>
                   </div>
-                </div>{" "}
+                </div>
               </div>
-            ) : (
-              <div> </div>
             )}
 
-            {this.state.error ? (
+            {this.state.error && (
               <div>
-                <div class="ds-c-alert ds-c-alert--error">
-                  <div class="ds-c-alert__body">
-                    <h3 class="ds-c-alert__heading">Something went wrong</h3>
+                <div className="ds-c-alert ds-c-alert--error">
+                  <div className="ds-c-alert__body">
+                    <h3 className="ds-c-alert__heading">
+                      Something went wrong
+                    </h3>
                   </div>
-                </div>{" "}
+                </div>
               </div>
-            ) : (
-              <div> </div>
             )}
           </form>
         </div>

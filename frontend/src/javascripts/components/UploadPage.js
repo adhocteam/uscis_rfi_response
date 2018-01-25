@@ -125,28 +125,24 @@ class UploadPage extends React.Component {
             Submit
           </Button>
         </form>
-        {this.state.success ? (
+        <br />
+        {this.state.success && (
           <div>
-            <div class="ds-c-alert ds-c-alert--success">
-              <div class="ds-c-alert__body">
-                <h3 class="ds-c-alert__heading">Upload succeeded!</h3>
+            <div className="ds-c-alert ds-c-alert--success">
+              <div className="ds-c-alert__body">
+                <h3 className="ds-c-alert__heading">Upload succeeded!</h3>
               </div>
-            </div>{" "}
+            </div>
           </div>
-        ) : (
-          <div> </div>
         )}
-
-        {this.state.error ? (
+        {this.state.error && (
           <div>
-            <div class="ds-c-alert ds-c-alert--error">
-              <div class="ds-c-alert__body">
-                <h3 class="ds-c-alert__heading">Upload failed.</h3>
+            <div className="ds-c-alert ds-c-alert--error">
+              <div className="ds-c-alert__body">
+                <h3 className="ds-c-alert__heading">Upload failed.</h3>
               </div>
-            </div>{" "}
+            </div>
           </div>
-        ) : (
-          <div> </div>
         )}
         <h3>Image Preview:</h3>
         <img src="" height="200" alt="Preview of what will be uploaded." />
