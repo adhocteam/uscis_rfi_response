@@ -7,5 +7,4 @@ Rails.application.routes.draw do
   get 'submissions/filter', to: 'submissions#filter'
   resources :submissions, only: [:index, :show, :create, :update]
   resource :admin, only: [:show]
-  get '/', to: 'application#not_found'
 end
