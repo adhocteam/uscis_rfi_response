@@ -53,7 +53,13 @@ const UscisApiService = {
         image_type: image_type,
       }),
     }).then(resp => {
-      return resp.json();
+      if (resp.status == 200) {
+        return resp.json();
+      } else if (resp.status == 401) {
+        throw "Invalid upload code.";
+      } else {
+        throw "Failed to upload.";
+      }
     });
   },
 

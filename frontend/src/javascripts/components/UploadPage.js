@@ -16,6 +16,7 @@ class UploadPage extends React.Component {
       timestamp: null,
       success: false,
       error: false,
+      errorMessage: "",
     };
 
     // for calling ReactS3Uploader's uploadFile from outside the component
@@ -30,14 +31,16 @@ class UploadPage extends React.Component {
 
   // reads in file and sets state to file contents
   readFile() {
-    var preview = document.querySelector("img");
+    const previewContainer = document.querySelector("#upload-preview");
+    const preview = document.querySelector("#upload-preview img");
 
-    var file = document.querySelector("input[type=file]").files[0];
-    var reader = new FileReader();
+    const file = document.querySelector("input[type=file]").files[0];
+    const reader = new FileReader();
 
     // on file load, loads the base64 bytes and image name into the component state
     let loadBytes = () => {
       preview.src = reader.result;
+      previewContainer.style = { display: "block" };
 
       this.setState(p => ({
         image_base64: reader.result,
@@ -72,17 +75,21 @@ class UploadPage extends React.Component {
       this.state.uuid,
       this.state.image_name,
       this.state.image_type
-    ).then(json => {
-      callback(json);
-    });
+    )
+      .then(json => {
+        callback(json);
+      })
+      .catch(e => {
+        this.onError(e);
+      });
   }
 
   success() {
     this.setState({ success: true });
   }
 
-  onError() {
-    this.setState({ error: true });
+  onError(e) {
+    this.setState({ error: true, errorMessage: e });
   }
   // on submit, validate form and call uploadFile, which will get the signed
   //   url from the API and then upload to S3.
@@ -91,8 +98,7 @@ class UploadPage extends React.Component {
     if (this.validateForm()) {
       this.s3Uploader.uploadFile();
     } else {
-      // TODO: Better UX for user error.
-      alert("Please provide a UUID and an image.");
+      this.onError("Please provide an upload code and an image.");
     }
   }
 
@@ -100,17 +106,19 @@ class UploadPage extends React.Component {
     return (
       <div className="ds-l-container ds-u-padding-top--3 ds-u-sm-text-align--center ds-u-sm-text-align--left qa-uscis-upload-page">
         <p>
-          Fill out your provided UUID and select your image, then hit submit.
+          Fill out your provided upload code and select your image, then hit
+          submit.
         </p>
         <form onSubmit={this.handleSubmit} className="qa-uscis-upload-form">
           <TextField
-            label="UUID"
+            label="Upload Code"
             name="uuid"
             value={this.state.uuid}
             onChange={e => this.setState({ uuid: e.target.value })}
           />
           <ReactS3Uploader
             className="ds-c-field"
+            accept="image/*"
             autoUpload={false}
             uploadRequestHeaders={{}}
             onFinish={this.success}
@@ -139,13 +147,17 @@ class UploadPage extends React.Component {
           <div className="ds-l-col--6">
             <div className="ds-c-alert ds-c-alert--error">
               <div className="ds-c-alert__body">
-                <h3 className="ds-c-alert__heading">Upload failed.</h3>
+                <h3 className="ds-c-alert__heading">
+                  {this.state.errorMessage}
+                </h3>
               </div>
             </div>
           </div>
         )}
-        <h3>Image Preview:</h3>
-        <img src="" height="200" alt="Preview of what will be uploaded." />
+        <div id="upload-preview" style={{ display: "none" }}>
+          <h3>Image Preview:</h3>
+          <img src="" height="200" alt="Preview of what will be uploaded." />
+        </div>
       </div>
     );
   }
