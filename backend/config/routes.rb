@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   mount_devise_token_auth_for 'Admin', at: 'auth', skip: [:omniauth_callbacks]
   post 'submissions/presigned_url', to: 'submissions#presigned_url'
   get 'submissions/filter', to: 'submissions#filter'
+  post 'submissions/new_upload', to: 'submissions#new_upload'
   resources :submissions, only: [:index, :show, :create, :update]
   resource :admin, only: [:show]
 end

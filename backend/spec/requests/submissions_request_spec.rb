@@ -66,24 +66,48 @@ RSpec.describe SubmissionsController, type: :request do
 
     describe 'post #presigned_url' do
       it '401s' do
+        submission_id = Submission.first.id
         headers = { 'CONTENT_TYPE' => 'application/json' }
         # to generate the image, I found a tiny png world map, and did:
         # base64 < world_tiny.png
         post '/submissions/presigned_url', params: <<~POST, headers: headers
           {
-            "user_id": "e3ca6d96454e4a508a677e9e6c3dc3e3",
+            "submission_id": "#{submission_id}",
             "image_name": "my cat.jpg",
             "image_type": "image/png"
           }
         POST
         expect(response).to have_http_status(:success)
-        url = 'https://uscis-rfds.s3.us-stubbed-1.amazonaws.com/e3ca6d96454e4a508a677e9e6c3dc3e3-my%20cat.jpg'
+        url = "https://uscis-rfds.s3.us-stubbed-1.amazonaws.com/#{submission_id}-my%20cat.jpg"
         body = JSON.parse(response.body)
         expect(body['status']).to eq 'ok'
         expect(body['signedUrl']).to match url
       end
     end
   end
+
+  describe 'post #new_upload' do
+    let(:auth_headers) do
+      post 'submissions/new_upload', params: <<~POST, headers: headers
+      {
+        "name": "Test User",
+        "email": "testuser@noreply.org"
+        "dob": "01-01-1976",
+        "street1": "123 Fake Street."
+        "street2": "Apt. 123",
+        "city": "Phoenix",
+        "state": "AZ", 
+        "zip": "12345"
+      }
+      POST
+      submission = Submission.find_by(email: "testuser@noreply.org")
+      expect(response).to have_http_status(:success)
+      body=JSON.parse(response.body)
+      expect(body['status']).to eq 'ok'
+      expect(body['id']).to eq submission.id
+    end
+  end
+
 
   context 'logged in' do
     let(:auth_headers) do
