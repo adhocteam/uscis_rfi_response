@@ -104,7 +104,7 @@ const UscisApiService = {
   },
 
   createUser: (name, dob, email, street1, street2, city, state, zip) => {
-    return authedRequest(`submissions/new_upload`, {
+    return authedRequest(`/submissions/new_upload`, {
       method: "POST",
       body: JSON.stringify({
         name: name || "",

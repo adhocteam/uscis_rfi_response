@@ -63,6 +63,10 @@ exports[`renders 1`] = `
       />
       <Route
         component={[Function]}
+        path="/request"
+      />
+      <Route
+        component={[Function]}
         exact={true}
         path="/"
       />
