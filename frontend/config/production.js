@@ -1,3 +1,3 @@
 module.exports = {
-  // environment specific variables go here
+  BASE_URL: '"https://uscis-rfds.adhocteam.us"',
 };
