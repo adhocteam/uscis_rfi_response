@@ -1,6 +1,6 @@
 import React from "react";
 
-import history from "../history";
+import history from "../services/history";
 import UscisApiService from "../services/UscisApiService";
 
 class Login extends React.Component {

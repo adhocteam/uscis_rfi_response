@@ -1,9 +1,10 @@
 import React from "react";
 import { Router, Route, Switch } from "react-router-dom";
 
-import history from "../history";
+import history from "../services/history";
 import AdminPage from "./AdminPage";
 import LoginPage from "./LoginPage";
+import LogoutPage from "./LogoutPage";
 import UploadPage from "./UploadPage";
 import RequestUpload from "./RequestUpload";
 
@@ -27,6 +28,7 @@ export default function App() {
         </div>
         <Switch>
           <Route path="/login" exact component={LoginPage} />
+          <Route path="/logout" exact component={LogoutPage} />
           <Route path="/review" component={AdminPage} />
           <Route path="/request" component={RequestUpload} />
           <Route path="/" exact component={UploadPage} />

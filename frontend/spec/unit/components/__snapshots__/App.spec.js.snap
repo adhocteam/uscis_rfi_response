@@ -54,6 +54,11 @@ exports[`renders 1`] = `
       />
       <Route
         component={[Function]}
+        exact={true}
+        path="/logout"
+      />
+      <Route
+        component={[Function]}
         path="/review"
       />
       <Route
