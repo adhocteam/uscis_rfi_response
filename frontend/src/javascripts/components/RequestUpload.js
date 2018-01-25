@@ -145,7 +145,7 @@ class RequestUpload extends React.Component {
           </Button>
         </form>
         {this.state.userID && (
-          <div class="ds-l-col--6">
+          <div className="ds-l-col--6">
             <div className="ds-c-alert ds-c-alert--success">
               <div className="ds-c-alert__body">
                 <h3 className="ds-c-alert__heading">User created!</h3>
