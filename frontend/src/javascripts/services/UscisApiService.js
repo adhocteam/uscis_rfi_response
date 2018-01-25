@@ -40,7 +40,7 @@ const UscisApiService = {
   getAdmin: () => authedRequest("/admin", {}, "Failed to get admin."),
 
   // TODO: error handling
-  getSignedUrl: (user_id, image_name, image_type) => {
+  getSignedUrl: (submission_id, image_name, image_type) => {
     return fetch(`${BASE_URL}/submissions/presigned_url`, {
       method: "POST",
       headers: {
@@ -53,9 +53,7 @@ const UscisApiService = {
         image_type: image_type,
       }),
     }).then(resp => {
-      if (resp.status === 200) {
-        return resp.json();
-      }
+      return resp.json();
     });
   },
 
@@ -95,7 +93,7 @@ const UscisApiService = {
   },
 
   updateSubmission: ({ id, notes, status }) => {
-    authedRequest(
+    return authedRequest(
       `/submissions/${id}`,
       {
         method: "PUT",
