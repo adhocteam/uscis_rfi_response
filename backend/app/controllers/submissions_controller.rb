@@ -2,6 +2,7 @@
 
 class SubmissionsController < ApplicationController
   before_action :authenticate_admin!, except: [:presigned_url]
+  before_action :no_cache
 
   def index
     submissions = Submission.all
@@ -79,5 +80,9 @@ class SubmissionsController < ApplicationController
 
   def review_params
     params.permit(:status, :notes)
+  end
+
+  def no_cache
+    response.set_header('Last-Modified', Time.now.httpdate)
   end
 end
