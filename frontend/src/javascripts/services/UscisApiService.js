@@ -12,7 +12,6 @@ const updateTokens = headers => {
   updateIfPresent(headers, "expiry", "expiry");
   updateIfPresent(headers, "uid", "uid");
   updateIfPresent(headers, "client", "client");
-  console.log("tok: ", sessionStorage.getItem("token"));
 };
 
 const authedRequest = (path, settings, error) =>
