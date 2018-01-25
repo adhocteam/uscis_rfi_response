@@ -58,8 +58,8 @@ class Submission extends React.Component {
                 />
               </div>
               <div>
-                <fieldset class="ds-c-fieldset ds-u-margin-top--0">
-                  <legend class="ds-c-label">Your review</legend>
+                <fieldset className="ds-c-fieldset ds-u-margin-top--0">
+                  <legend className="ds-c-label">Your review</legend>
                   <input
                     id="approve"
                     type="radio"
@@ -85,7 +85,7 @@ class Submission extends React.Component {
                 Submit
               </Button>
               {this.state.success && (
-                <div class="ds-l-col--6">
+                <div className="ds-l-col--6">
                   <div className="ds-c-alert ds-c-alert--success">
                     <div className="ds-c-alert__body">
                       <h4 className="ds-c-alert__heading">Review Processed</h4>
@@ -99,7 +99,7 @@ class Submission extends React.Component {
               )}
 
               {this.state.error && (
-                <div class="ds-l-col--6">
+                <div className="ds-l-col--6">
                   <div className="ds-c-alert ds-c-alert--error">
                     <div className="ds-c-alert__body">
                       <h3 className="ds-c-alert__heading">
