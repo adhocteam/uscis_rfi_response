@@ -40,9 +40,10 @@ class Submission extends React.Component {
   renderSubmission = () => {
     const { submission } = this.state;
     return submission ? (
-      <div className="ds-l-container ds-u-margin--2 ds-u-sm-text-align--center ds-u-sm-text-align--left">
+      <div className="ds-u-margin--2">
         <section>
-          <img alt={`UUID: ${submission.id}`} src={submission.uri} />
+          <h2>Reviewing Submission {submission.id}</h2>
+          <img alt={`Upload Code: ${submission.id}`} src={submission.uri} />
           <div>
             <form onSubmit={this.handleSubmit}>
               <div>
@@ -137,7 +138,7 @@ class Submission extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="ds-l-container">
         {this.renderSubmission()}
         {this.renderCustomer()}
       </div>

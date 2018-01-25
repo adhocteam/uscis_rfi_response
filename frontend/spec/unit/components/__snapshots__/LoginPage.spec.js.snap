@@ -2,16 +2,13 @@
 
 exports[`renders 1`] = `
 <div
-  className="login"
+  className="login ds-l-container ds-u-padding-top--3 ds-u-sm-text-align--center ds-u-sm-text-align--left qa-uscis-upload-page"
 >
   <h2>
     Login
   </h2>
   <p>
-    Please enter your email and password
-  </p>
-  <p>
-    You must log in to view the page
+    Please enter your email and password.
   </p>
   <form
     onSubmit={[Function]}
@@ -19,6 +16,7 @@ exports[`renders 1`] = `
     <label>
       Email
       <input
+        className="ds-c-field"
         onChange={[Function]}
         type="text"
         value=""
@@ -28,16 +26,20 @@ exports[`renders 1`] = `
     <label>
       Password
       <input
+        className="ds-c-field"
         onChange={[Function]}
         type="password"
         value=""
       />
     </label>
     <br />
-    <input
+    <Button
       type="submit"
-      value="Log In"
-    />
+      variation="primary"
+    >
+      Submit
+    </Button>
   </form>
+  <br />
 </div>
 `;
