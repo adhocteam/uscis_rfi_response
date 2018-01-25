@@ -3,6 +3,7 @@ import { Router, Link, Route, Switch } from "react-router-dom";
 
 import history from "../services/history";
 import NavLinks from "./NavLinks";
+import NamePlate from "./NamePlate";
 import AdminPage from "./AdminPage";
 import LoginPage from "./LoginPage";
 import LogoutPage from "./LogoutPage";
@@ -15,14 +16,14 @@ export default function App() {
         <header className="ds-u-fill--primary-darkest">
           <div className="ds-l-container">
             <div className="ds-l-row">
-              <div className="ds-l-col--12 ds-l-md-col--6">
+              <div className="ds-l-col--12 ds-l-md-col--4">
                 <h1
                   id="main"
                   className="ds-u-margin--0 ds-u-margin-top--1 ds-u-margin-bottom--1"
                 >
                   <Link
                     to="/"
-                    className="ds-u-color--white ds-u-font-size--h3 ds-u-font-weight--bold ds-u-text-decoration--none"
+                    className="ds-u-color--white ds-u-font-size--h3 ds-u-font-weight--bold"
                   >
                     USCIS RFDS Front-End
                   </Link>
@@ -31,6 +32,7 @@ export default function App() {
               <NavLinks />
             </div>
           </div>
+          <NamePlate />
         </header>
         <Switch>
           <Route path="/login" exact component={LoginPage} />
