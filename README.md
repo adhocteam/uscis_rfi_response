@@ -17,7 +17,7 @@ See `/ops/README.md` for deployment and CI related information.
 ## Try it out
 
 1. Head over to https://uscis-rfds.adhocteam.us/
-2. [Log-in](https://uscis-rfds.adhocteam.us/login) with username: `admin@adhocteam.us`, password: `password`.
+2. [Log-in](https://uscis-rfds.adhocteam.us/login) with provided demo credentials.
 
    ![](./images/login.png)
 
