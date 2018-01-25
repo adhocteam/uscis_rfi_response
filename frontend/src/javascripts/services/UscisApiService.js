@@ -1,4 +1,4 @@
-import history from "../history";
+import history from "./history";
 
 const authedRequest = (url, settings, error) =>
   fetch(url, {

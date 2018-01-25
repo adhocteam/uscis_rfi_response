@@ -1,5 +1,7 @@
 import React from "react";
 import UscisApiService from "../services/UscisApiService";
+import TextField from "@cmsgov/design-system-core/dist/components/TextField/TextField";
+import Button from "@cmsgov/design-system-core/dist/components/Button/Button";
 
 class RequestUpload extends React.Component {
   constructor(props) {
@@ -67,110 +69,106 @@ class RequestUpload extends React.Component {
     const { url } = this.props.match;
 
     return admin ? (
-      <div className="ds-l-container ds-u-padding-top--3 ds-u-sm-text-align--center ds-u-sm-text-align--left">
+      <div className="ds-l-container ds-u-sm-text-align--center ds-u-sm-text-align--left">
         <h2> Request Upload </h2>
         <p> Please enter a user's information to generate an upload code.</p>
-        <form onSubmit={this.handleSubmit}>
-          <label>
-            Name:
-            <br />
-            <input
+        <form onSubmit={this.handleSubmit} className="qa-uscis-upload-form">
+          <label className="ds-c-label ds-u-margin-top--0">
+            Name
+            <TextField
               name="name"
               type="text"
               value={this.state.name}
               onChange={this.handleChange}
             />
           </label>
-          <br />
-          <label>
+          <label class="ds-c-label ds-u-margin-top--0">
             DOB:
-            <br />
-            <input
+            <TextField
               name="dob"
               type="text"
               value={this.state.dob}
               onChange={this.handleChange}
             />
           </label>
-          <br />
-          <label>
+          <label class="ds-c-label ds-u-margin-top--0">
             Email:
-            <br />
-            <input
+            <TextField
               name="email"
               type="text"
               value={this.state.email}
               onChange={this.handleChange}
             />
           </label>
-          <br />
-          <label>
+          <label class="ds-c-label ds-u-margin-top--0">
             Street 1:
             <br />
-            <input
+            <TextField
               name="street1"
               type="text"
               value={this.state.street1}
               onChange={this.handleChange}
             />
           </label>
-          <br />
-          <label>
+          <label class="ds-c-label ds-u-margin-top--0">
             Street 2:
             <br />
-            <input
+            <TextField
               name="street2"
               type="text"
               value={this.state.street2}
               onChange={this.handleChange}
             />
           </label>
-          <br />
-          <label>
+          <label class="ds-c-label ds-u-margin-top--0">
             City:
-            <br />
-            <input
+            <TextField
               name="city"
               type="text"
               value={this.state.city}
               onChange={this.handleChange}
             />
           </label>
-          <br />
-          <label>
+          <label class="ds-c-label ds-u-margin-top--0">
             State:
-            <br />
-            <input
+            <TextField
               name="state"
               type="text"
               value={this.state.state}
               onChange={this.handleChange}
             />
           </label>
-          <br />
-          <label>
+          <label class="ds-c-label ds-u-margin-top--0">
             Zip:
-            <br />
-            <input
+            <TextField
               name="zip"
               type="text"
               value={this.state.zip}
               onChange={this.handleChange}
             />
           </label>
-          <br />
-          <input type="submit" value="Submit" />
+          <Button type="submit" variation="primary">
+            Submit
+          </Button>
         </form>
         {this.state.userID ? (
           <div>
-            {" "}
-            <h2> User created! </h2>
-            <p>
-              {" "}
-              Please send this id to {this.state.emailText} to upload at{" "}
-              http://uscis-rfds.adhocteam.us.s3-website-us-east-1.amazonaws.com/
-            </p>
-            <pre> {this.state.userID} </pre>
+            <div class="ds-c-alert ds-c-alert--success">
+              <div class="ds-c-alert__body">
+                <h3 class="ds-c-alert__heading">User created!</h3>
+                <p class="ds-c-alert__text" /> Please send the following upload
+                code to{" "}
+                <a href="mailto:{this.state.emailText}">
+                  {" "}
+                  {this.state.emailText}{" "}
+                </a>{" "}
+                to submit their picture at{" "}
+                <a href="http://uscis-rfds.adhocteam.us.s3-website-us-east-1.amazonaws.com/">
+                  the upload tool.{" "}
+                </a>
+                <pre> {this.state.userID} </pre>
+              </div>
+            </div>{" "}
           </div>
         ) : (
           <div> </div>
