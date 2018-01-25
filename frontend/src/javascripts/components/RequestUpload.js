@@ -83,7 +83,7 @@ class RequestUpload extends React.Component {
             />
           </label>
           <label class="ds-c-label ds-u-margin-top--0">
-            DOB:
+            Date of Birth
             <TextField
               name="dob"
               type="text"
@@ -92,7 +92,7 @@ class RequestUpload extends React.Component {
             />
           </label>
           <label class="ds-c-label ds-u-margin-top--0">
-            Email:
+            Email
             <TextField
               name="email"
               type="text"
@@ -101,7 +101,7 @@ class RequestUpload extends React.Component {
             />
           </label>
           <label class="ds-c-label ds-u-margin-top--0">
-            Street 1:
+            Street 1
             <br />
             <TextField
               name="street1"
@@ -111,7 +111,7 @@ class RequestUpload extends React.Component {
             />
           </label>
           <label class="ds-c-label ds-u-margin-top--0">
-            Street 2:
+            Street 2
             <br />
             <TextField
               name="street2"
@@ -121,7 +121,7 @@ class RequestUpload extends React.Component {
             />
           </label>
           <label class="ds-c-label ds-u-margin-top--0">
-            City:
+            City
             <TextField
               name="city"
               type="text"
@@ -130,7 +130,7 @@ class RequestUpload extends React.Component {
             />
           </label>
           <label class="ds-c-label ds-u-margin-top--0">
-            State:
+            State
             <TextField
               name="state"
               type="text"
@@ -139,7 +139,7 @@ class RequestUpload extends React.Component {
             />
           </label>
           <label class="ds-c-label ds-u-margin-top--0">
-            Zip:
+            Zip
             <TextField
               name="zip"
               type="text"
@@ -164,7 +164,7 @@ class RequestUpload extends React.Component {
                 </a>{" "}
                 to submit their picture at{" "}
                 <a href="http://uscis-rfds.adhocteam.us.s3-website-us-east-1.amazonaws.com/">
-                  the upload tool.{" "}
+                  the upload tool:{" "}
                 </a>
                 <pre> {this.state.userID} </pre>
               </div>
