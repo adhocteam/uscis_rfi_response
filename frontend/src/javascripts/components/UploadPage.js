@@ -127,7 +127,7 @@ class UploadPage extends React.Component {
         </form>
         <br />
         {this.state.success && (
-          <div>
+          <div class="ds-l-col--6">
             <div className="ds-c-alert ds-c-alert--success">
               <div className="ds-c-alert__body">
                 <h3 className="ds-c-alert__heading">Upload succeeded!</h3>
@@ -136,7 +136,7 @@ class UploadPage extends React.Component {
           </div>
         )}
         {this.state.error && (
-          <div>
+          <div class="ds-l-col--6">
             <div className="ds-c-alert ds-c-alert--error">
               <div className="ds-c-alert__body">
                 <h3 className="ds-c-alert__heading">Upload failed.</h3>

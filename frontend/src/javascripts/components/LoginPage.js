@@ -2,6 +2,7 @@ import React from "react";
 
 import history from "../services/history";
 import UscisApiService from "../services/UscisApiService";
+import Button from "@cmsgov/design-system-core/dist/components/Button/Button";
 
 class Login extends React.Component {
   state = { email: "", password: "" };
@@ -25,7 +26,7 @@ class Login extends React.Component {
 
   render() {
     return (
-      <div className="login">
+      <div className="login ds-l-container ds-u-padding-top--3 ds-u-sm-text-align--center ds-u-sm-text-align--left qa-uscis-upload-page">
         <h2>Login</h2>
         <p>Please enter your email and password</p>
         <p>You must log in to view the page</p>
@@ -33,6 +34,7 @@ class Login extends React.Component {
           <label>
             Email
             <input
+              className="ds-c-field"
               type="text"
               value={this.state.email}
               onChange={this.handleEmailChange}
@@ -42,13 +44,16 @@ class Login extends React.Component {
           <label>
             Password
             <input
+              className="ds-c-field"
               type="password"
               value={this.state.password}
               onChange={this.handlePasswordChange}
             />
           </label>
           <br />
-          <input type="submit" value="Log In" />
+          <Button type="submit" variation="primary">
+            Submit
+          </Button>
         </form>
       </div>
     );

@@ -40,72 +40,79 @@ class Submission extends React.Component {
   renderSubmission = () => {
     const { submission } = this.state;
     return submission ? (
-      <section>
-        <img alt={`UUID: ${submission.id}`} src={submission.uri} />
-        <div>
-          <form onSubmit={this.handleSubmit}>
-            <div>
-              <label htmlFor="notes">Notes</label>
-              <br />
-              <textarea
-                id="notes"
-                name="notes"
-                value={submission.notes}
-                onChange={this.handleNotesChange}
-              />
-            </div>
-            <div>
-              <input
-                id="approve"
-                type="radio"
-                name="status"
-                value="approved"
-                checked={submission.status === "approved"}
-                onChange={this.handleStatusChange}
-              />
-              <label htmlFor="approve">Approve</label>
-              <br />
-              <input
-                id="deny"
-                type="radio"
-                name="status"
-                value="denied"
-                checked={submission.status === "denied"}
-                onChange={this.handleStatusChange}
-              />
-              <label htmlFor="deny">Deny</label>
-            </div>
-            <Button type="submit" variation="primary" value="Submit">
-              Submit
-            </Button>
-            {this.state.success && (
+      <div className="ds-l-container ds-u-margin--2 ds-u-sm-text-align--center ds-u-sm-text-align--left">
+        <section>
+          <img alt={`UUID: ${submission.id}`} src={submission.uri} />
+          <div>
+            <form onSubmit={this.handleSubmit}>
               <div>
-                <div className="ds-c-alert ds-c-alert--success">
-                  <div className="ds-c-alert__body">
-                    <h4 className="ds-c-alert__heading">Review Processed</h4>
-                    <p>
-                      Head over to <Link to={`/review`}>submissions</Link> to
-                      review another submission.
-                    </p>
+                <label htmlFor="notes">Notes</label>
+                <br />
+                <textarea
+                  className="ds-c-field"
+                  rows="5"
+                  id="notes"
+                  name="notes"
+                  value={submission.notes}
+                  onChange={this.handleNotesChange}
+                />
+              </div>
+              <div>
+                <fieldset class="ds-c-fieldset ds-u-margin-top--0">
+                  <legend class="ds-c-label">Your review</legend>
+                  <input
+                    id="approve"
+                    type="radio"
+                    name="status"
+                    value="approved"
+                    checked={submission.status === "approved"}
+                    onChange={this.handleStatusChange}
+                  />
+                  <label htmlFor="approve">Approve</label>
+                  <br />
+                  <input
+                    id="deny"
+                    type="radio"
+                    name="status"
+                    value="denied"
+                    checked={submission.status === "denied"}
+                    onChange={this.handleStatusChange}
+                  />
+                  <label htmlFor="deny">Deny</label>
+                </fieldset>
+              </div>
+              <Button type="submit" variation="primary" value="Submit">
+                Submit
+              </Button>
+              {this.state.success && (
+                <div class="ds-l-col--6">
+                  <div className="ds-c-alert ds-c-alert--success">
+                    <div className="ds-c-alert__body">
+                      <h4 className="ds-c-alert__heading">Review Processed</h4>
+                      <p>
+                        Head over to <Link to={`/review`}>submissions</Link> to
+                        review another submission.
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {this.state.error && (
-              <div>
-                <div className="ds-c-alert ds-c-alert--error">
-                  <div className="ds-c-alert__body">
-                    <h3 className="ds-c-alert__heading">
-                      Something went wrong
-                    </h3>
+              {this.state.error && (
+                <div class="ds-l-col--6">
+                  <div className="ds-c-alert ds-c-alert--error">
+                    <div className="ds-c-alert__body">
+                      <h3 className="ds-c-alert__heading">
+                        Something went wrong
+                      </h3>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
-          </form>
-        </div>
-      </section>
+              )}
+            </form>
+          </div>
+        </section>
+      </div>
     ) : (
       <p>No submission found!</p>
     );
@@ -119,7 +126,7 @@ class Submission extends React.Component {
 
     const { customer } = submission;
     return customer ? (
-      <section>
+      <section className="ds-l-container ds-u-sm-text-align--center ds-u-sm-text-align--left">
         <div>Name: {customer.name}</div>
         <div>Email: {customer.email}</div>
       </section>

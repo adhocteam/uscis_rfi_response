@@ -79,7 +79,7 @@ class RequestUpload extends React.Component {
     const { url } = this.props.match;
 
     return admin ? (
-      <div className="ds-l-container ds-u-sm-text-align--center ds-u-sm-text-align--left">
+      <div className="ds-l-container ds-u-margin--2 ds-u-sm-text-align--center ds-u-sm-text-align--left">
         <h2> Request Upload </h2>
         <p> Please enter a user's information to generate an upload code.</p>
         <form onSubmit={this.handleSubmit} className="qa-uscis-upload-form">
@@ -145,7 +145,7 @@ class RequestUpload extends React.Component {
           </Button>
         </form>
         {this.state.userID && (
-          <div>
+          <div class="ds-l-col--6">
             <div className="ds-c-alert ds-c-alert--success">
               <div className="ds-c-alert__body">
                 <h3 className="ds-c-alert__heading">User created!</h3>
