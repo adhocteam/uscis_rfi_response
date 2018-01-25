@@ -141,7 +141,7 @@ class UploadPage extends React.Component {
           <div>
             <div class="ds-c-alert ds-c-alert--error">
               <div class="ds-c-alert__body">
-                <h3 class="ds-c-alert__heading">Something went wrong</h3>
+                <h3 class="ds-c-alert__heading">Upload failed.</h3>
               </div>
             </div>{" "}
           </div>
