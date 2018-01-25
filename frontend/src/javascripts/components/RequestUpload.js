@@ -1,4 +1,5 @@
 import React from "react";
+import {Link} from "react-router-dom";
 import UscisApiService from "../services/UscisApiService";
 import TextField from "@cmsgov/design-system-core/dist/components/TextField/TextField";
 import Button from "@cmsgov/design-system-core/dist/components/Button/Button";
@@ -154,7 +155,8 @@ class RequestUpload extends React.Component {
               <a href={`mailto:${this.state.emailText}`}>
                 {this.state.emailText}
               </a>{" "}
-              to submit their picture at <a href={BASE_URL}>the upload tool</a>:
+              to submit their picture at{" "}
+              <Link to="/">the upload tool</Link>:
               <pre>{this.state.userID}</pre>
             </div>
           </div>

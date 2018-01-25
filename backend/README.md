@@ -1,24 +1,10 @@
-# README
+## Backend
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+The backend Rails API.
 
-Things you may want to cover:
+### Key locations:
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+* `/app/controllers/submissions_controller.rb`: Controller for submissions and review
+* `/spec/requests/submissions_request_spec.rb`: Unit tests
+* `/db/schema.rb`: Database schema
+* `/config/routes.rb`: Route declarations
