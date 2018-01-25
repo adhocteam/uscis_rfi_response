@@ -1,35 +1,41 @@
 import React from "react";
-
+import Button from "@cmsgov/design-system-core/dist/components/Button/Button";
 import UscisApiService from "../services/UscisApiService";
+import { Link } from "react-router-dom";
 
 class Submission extends React.Component {
-  state = { submission: null };
+  state = { submission: null, success: false, error: false };
 
   componentDidMount() {
     const { params: { id } } = this.props.match;
-    UscisApiService
-      .getSubmission(id)
+    UscisApiService.getSubmission(id)
       .then(submission => this.setState({ submission }))
-      .catch(err => { console.error(err); });
+      .catch(err => {
+        console.error(err);
+      });
   }
 
-  handleNotesChange = (e) => {
+  handleNotesChange = e => {
     this.setState({
-      submission: { ...this.state.submission, notes: e.target.value }
+      submission: { ...this.state.submission, notes: e.target.value },
     });
   };
 
-  handleStatusChange = (e) => {
+  handleStatusChange = e => {
     this.setState({
-      submission: { ...this.state.submission, status: e.target.value }
+      submission: { ...this.state.submission, status: e.target.value },
     });
   };
 
-  handleSubmit = (e) => {
+  handleSubmit = e => {
     e.preventDefault();
-    UscisApiService
-      .updateSubmission(this.state.submission)
-      .catch(err => { console.error(err); });
+
+    UscisApiService.updateSubmission(this.state.submission).catch(err => {
+      this.setState({ error: true });
+      console.error(err);
+    });
+    console.log("i am here");
+    this.setState({ success: true });
   };
 
   renderSubmission = () => {
@@ -43,40 +49,77 @@ class Submission extends React.Component {
               <label htmlFor="notes">Notes</label>
               <br />
               <textarea
-                  id="notes"
-                  name="notes"
-                  value={submission.notes}
-                  onChange={this.handleNotesChange} />
+                id="notes"
+                name="notes"
+                value={submission.notes}
+                onChange={this.handleNotesChange}
+              />
             </div>
             <div>
               <input
-                  id="approve"
-                  type="radio"
-                  name="status"
-                  value="approved"
-                  checked={submission.status === "approved"}
-                  onChange={this.handleStatusChange} />
+                id="approve"
+                type="radio"
+                name="status"
+                value="approved"
+                checked={submission.status === "approved"}
+                onChange={this.handleStatusChange}
+              />
               <label htmlFor="approve">Approve</label>
               <br />
               <input
-                  id="deny"
-                  type="radio"
-                  name="status"
-                  value="denied"
-                  checked={submission.status === "denied"}
-                  onChange={this.handleStatusChange} />
+                id="deny"
+                type="radio"
+                name="status"
+                value="denied"
+                checked={submission.status === "denied"}
+                onChange={this.handleStatusChange}
+              />
               <label htmlFor="deny">Deny</label>
             </div>
-            <input type="submit" value="Submit" />
+            <Button type="submit" variation="primary" value="Submit">
+              Submit
+            </Button>
+            {this.state.success ? (
+              <div>
+                <div class="ds-c-alert ds-c-alert--success">
+                  <div class="ds-c-alert__body">
+                    <h4 class="ds-c-alert__heading">Review Processed</h4>
+                    <p>
+                      {" "}
+                      Head over to <Link to={`/review`}> submissions</Link> to
+                      review another submission.
+                    </p>
+                  </div>
+                </div>{" "}
+              </div>
+            ) : (
+              <div> </div>
+            )}
+
+            {this.state.error ? (
+              <div>
+                <div class="ds-c-alert ds-c-alert--error">
+                  <div class="ds-c-alert__body">
+                    <h3 class="ds-c-alert__heading">Something went wrong</h3>
+                  </div>
+                </div>{" "}
+              </div>
+            ) : (
+              <div> </div>
+            )}
           </form>
         </div>
       </section>
-    ) : <p>No submission found!</p>;
+    ) : (
+      <p>No submission found!</p>
+    );
   };
 
   renderCustomer = () => {
     const { submission } = this.state;
-    if (!submission) { return null; }
+    if (!submission) {
+      return null;
+    }
 
     const { customer } = submission;
     return customer ? (
@@ -84,8 +127,10 @@ class Submission extends React.Component {
         <div>Name: {customer.name}</div>
         <div>Email: {customer.email}</div>
       </section>
-    ) : <p>No customer found!</p>;
-  }
+    ) : (
+      <p>No customer found!</p>
+    );
+  };
 
   render() {
     return (

@@ -13,7 +13,9 @@ class UploadPage extends React.Component {
       image_base64: null,
       image_name: null,
       image_type: null,
-      timestamp: null
+      timestamp: null,
+      success: false,
+      error: false,
     };
 
     // for calling ReactS3Uploader's uploadFile from outside the component
@@ -22,6 +24,8 @@ class UploadPage extends React.Component {
     this.readFile = this.readFile.bind(this);
     this.getSignedUrl = this.getSignedUrl.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.success = this.success.bind(this);
+    this.onError = this.onError.bind(this);
   }
 
   // reads in file and sets state to file contents
@@ -39,7 +43,7 @@ class UploadPage extends React.Component {
         image_base64: reader.result,
         image_name: file.name,
         image_type: file.type,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       }));
     };
 
@@ -73,6 +77,13 @@ class UploadPage extends React.Component {
     });
   }
 
+  success() {
+    this.setState({ success: true });
+  }
+
+  onError() {
+    this.setState({ error: true });
+  }
   // on submit, validate form and call uploadFile, which will get the signed
   //   url from the API and then upload to S3.
   handleSubmit(e) {
@@ -102,6 +113,8 @@ class UploadPage extends React.Component {
             className="ds-c-field"
             autoUpload={false}
             uploadRequestHeaders={{}}
+            onFinish={this.success}
+            onError={this.onError}
             getSignedUrl={this.getSignedUrl}
             ref={s3Uploader => {
               this.s3Uploader = s3Uploader;
@@ -112,7 +125,29 @@ class UploadPage extends React.Component {
             Submit
           </Button>
         </form>
+        {this.state.success ? (
+          <div>
+            <div class="ds-c-alert ds-c-alert--success">
+              <div class="ds-c-alert__body">
+                <h3 class="ds-c-alert__heading">Upload succeeded!</h3>
+              </div>
+            </div>{" "}
+          </div>
+        ) : (
+          <div> </div>
+        )}
 
+        {this.state.error ? (
+          <div>
+            <div class="ds-c-alert ds-c-alert--error">
+              <div class="ds-c-alert__body">
+                <h3 class="ds-c-alert__heading">Something went wrong</h3>
+              </div>
+            </div>{" "}
+          </div>
+        ) : (
+          <div> </div>
+        )}
         <h3>Image Preview:</h3>
         <img src="" height="200" alt="Preview of what will be uploaded." />
       </div>

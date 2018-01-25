@@ -45,7 +45,7 @@ class SubmissionsController < ApplicationController
     end
     uri = "https://s3.amazonaws.com/uscis-rfds/" + key
     submission.update(uri: uri, status: "submitted")
-    render json: { 'status': 'ok', 'signedUrl': url }
+    render json: { 'status': 'ok', 'signedUrl': url, 'uri': uri }
   end
 
   def new_upload
