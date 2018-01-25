@@ -1,0 +1,95 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders certain links when logged in 1`] = `
+<div
+  className="ds-l-col--12 ds-l-md-col--8 navigation"
+>
+  <ul
+    className="ds-u-margin--0 ds-u-margin-top--1 ds-u-margin-bottom--1 ds-u-md-margin-top--3 ds-u-md-margin-bottom--0 ds-u-padding--0 ds-u-md-text-align--right"
+  >
+    <li
+      className="ds-u-display--inline-block  ds-u-margin-right--2"
+      key="0"
+    >
+      <Link
+        className="ds-u-color--white ds-u-font-weight--bold"
+        replace={false}
+        to="/logout"
+      >
+        Log Out
+      </Link>
+    </li>
+    <li
+      className="ds-u-display--inline-block  ds-u-margin-right--2"
+      key="1"
+    >
+      <Link
+        className="ds-u-color--white ds-u-font-weight--bold"
+        replace={false}
+        to="/"
+      >
+        Upload Image
+      </Link>
+    </li>
+    <li
+      className="ds-u-display--inline-block  ds-u-margin-right--2"
+      key="2"
+    >
+      <Link
+        className="ds-u-color--white ds-u-font-weight--bold"
+        replace={false}
+        to="/request"
+      >
+        Request an Upload
+      </Link>
+    </li>
+    <li
+      className="ds-u-display--inline-block  ds-u-margin-right--2"
+      key="3"
+    >
+      <Link
+        className="ds-u-color--white ds-u-font-weight--bold"
+        replace={false}
+        to="/review"
+      >
+        Review Submissions
+      </Link>
+    </li>
+  </ul>
+</div>
+`;
+
+exports[`renders certain links when logged out 1`] = `
+<div
+  className="ds-l-col--12 ds-l-md-col--8 navigation"
+>
+  <ul
+    className="ds-u-margin--0 ds-u-margin-top--1 ds-u-margin-bottom--1 ds-u-md-margin-top--3 ds-u-md-margin-bottom--0 ds-u-padding--0 ds-u-md-text-align--right"
+  >
+    <li
+      className="ds-u-display--inline-block  ds-u-margin-right--2"
+      key="0"
+    >
+      <Link
+        className="ds-u-color--white ds-u-font-weight--bold"
+        replace={false}
+        to="/login"
+      >
+        Log In
+      </Link>
+    </li>
+    <li
+      className="ds-u-display--inline-block  ds-u-margin-right--2"
+      key="1"
+    >
+      <Link
+        className="ds-u-color--white ds-u-font-weight--bold"
+        replace={false}
+        to="/"
+      >
+        Upload Image
+      </Link>
+    </li>
+  </ul>
+</div>
+`;

@@ -27,17 +27,10 @@ class AdminPage extends React.Component {
     const { url } = this.props.match;
 
     return admin ? (
-      <div>
-        <p>
-          Hello, {admin.name || admin.email}!&nbsp;
-          <Link to={url}>View all submissions</Link>
-          <Link to={`/request`}>Request a submission</Link>
-        </p>
-        <Switch>
-          <Route path={`${url}/:id`} component={Submission} />
-          <Route path={`${url}`} component={Submissions} />
-        </Switch>
-      </div>
+      <Switch>
+        <Route path={`${url}/:id`} component={Submission} />
+        <Route path={`${url}`} component={Submissions} />
+      </Switch>
     ) : (
       <p>No admin found!</p>
     );

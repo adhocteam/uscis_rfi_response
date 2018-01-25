@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import ChoiceList from "@cmsgov/design-system-core/dist/components/ChoiceList/ChoiceList";
 import UscisApiService from "../services/UscisApiService";
+import Button from "@cmsgov/design-system-core/dist/components/Button/Button";
 
 class Submissions extends React.Component {
   constructor(props) {
@@ -57,11 +58,14 @@ class Submissions extends React.Component {
       ));
 
     return submissions ? (
-      <div>
+      <div className=" ds-l-col--8 ds-u-padding-top--3 ds-u-sm-text-align--center ds-u-sm-text-align--left qa-uscis-upload-page">
         <form onSubmit={this.handleSubmit}>
           <label>
-            Submission status
-            <select value={this.state.filter} onChange={this.handleChange}>
+            <select
+              className="ds-c-field ds-u-display--inline-block"
+              value={this.state.filter}
+              onChange={this.handleChange}
+            >
               <option value="all">All</option>
               <option value="requested">Requested</option>
               <option value="submitted">Submitted</option>
@@ -69,9 +73,10 @@ class Submissions extends React.Component {
               <option value="denied">Denied</option>
             </select>
           </label>
-          <input type="submit" value="Submit" />
+
+          <Button type="submit">Submit</Button>
         </form>
-        <table>
+        <table className="ds-c-table">
           <thead>
             <tr>
               <th>Submission</th>
