@@ -8,6 +8,7 @@ import AdminPage from "./AdminPage";
 import LoginPage from "./LoginPage";
 import LogoutPage from "./LogoutPage";
 import UploadPage from "./UploadPage";
+import RequestUpload from "./RequestUpload";
 
 export default function App() {
   return (
@@ -38,6 +39,7 @@ export default function App() {
           <Route path="/login" exact component={LoginPage} />
           <Route path="/logout" exact component={LogoutPage} />
           <Route path="/review" component={AdminPage} />
+          <Route path="/request" component={RequestUpload} />
           <Route path="/" exact component={UploadPage} />
         </Switch>
       </div>

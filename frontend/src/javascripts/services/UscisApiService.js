@@ -40,7 +40,7 @@ const UscisApiService = {
   getAdmin: () => authedRequest("/admin", {}, "Failed to get admin."),
 
   // TODO: error handling
-  getSignedUrl: (user_id, image_name, image_type) => {
+  getSignedUrl: (submission_id, image_name, image_type) => {
     return fetch(`${BASE_URL}/submissions/presigned_url`, {
       method: "POST",
       headers: {
@@ -48,14 +48,12 @@ const UscisApiService = {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        user_id: user_id,
+        submission_id: submission_id,
         image_name: image_name,
         image_type: image_type,
       }),
     }).then(resp => {
-      if (resp.status === 200) {
-        return resp.json();
-      }
+      return resp.json();
     });
   },
 
@@ -94,15 +92,32 @@ const UscisApiService = {
     });
   },
 
-  updateSubmission: ({ id, notes, status }) =>
-    authedRequest(
+  updateSubmission: ({ id, notes, status }) => {
+    return authedRequest(
       `/submissions/${id}`,
       {
         method: "PUT",
         body: JSON.stringify({ notes, status }),
       },
       `Failed to update submission ${id}.`
-    ),
+    );
+  },
+
+  createUser: (name, dob, email, street1, street2, city, state, zip) => {
+    return authedRequest(`/submissions/new_upload`, {
+      method: "POST",
+      body: JSON.stringify({
+        name: name || "",
+        dob: dob || "",
+        email: email || "",
+        street1: street1 || "",
+        street2: street2 || "",
+        city: city || "",
+        state: state || "",
+        zip: zip || "",
+      }),
+    });
+  },
 };
 
 export default UscisApiService;
