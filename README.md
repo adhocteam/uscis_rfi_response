@@ -1,6 +1,6 @@
 # USCIS-RFDS
 
-A photo upload and review app. Running application can be found [here](https://uscis-rfds.adhocteam.us/). See [usage instructions](#usage)
+A photo upload and review app. Running application can be found [here](https://uscis-rfds.adhocteam.us/). See [usage instructions](#try-it-out)
 for login details.
 
 ## Technologies Used
