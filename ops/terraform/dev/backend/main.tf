@@ -58,6 +58,7 @@ module "uscis_backend" {
   task_count      = 1
   asg_desired     = 1
   ami_id          = "ami-28456852"
+  ssl_cert_id     = "${var.ssl_cert_id}"
 }
 
 resource "aws_db_subnet_group" "backend" {

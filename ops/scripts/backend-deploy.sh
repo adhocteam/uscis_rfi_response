@@ -23,7 +23,6 @@ then
 fi
 
 export TF_CLI_ARGS="-no-color"
-export TF_VAR_db_password="$DB_PASS"
 export AWS_DEFAULT_REGION="us-east-1"
 
 CLUSTER_NAME="terraform-uscis-backend-ecs-cluster"
@@ -48,9 +47,10 @@ fi
 
 # Verify terraform is only changing the appropriate resources
 pushd ../terraform/$ENV/backend
-TF_OUT=$(terraform init && terraform plan \
+TF_OUT=$(terraform init -backend-config="$TF_CONFIG" && terraform plan \
   -var service_version=$VERSION \
-  -var db_password=$DB_PASS)
+  -var db_password=$DB_PASS) \
+  -var-file="$TF_VARS"
 
 set +e
 TF_SRVC_CHECK=$(echo "$TF_OUT" | grep "module.uscis_backend.aws_ecs_service.main")
@@ -65,7 +65,7 @@ then
 fi
 
 # Run the deploy
-terraform apply -var service_version=$VERSION $FORCE
+terraform apply -var service_version=$VERSION $FORCE -var-file="$TF_VARS"
 
 popd
 
