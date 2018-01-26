@@ -2,15 +2,16 @@
 
 set -e
 
-ENV=$1
-VERSION=$2
+AWS_ACCOUNT_ID=$1
+ENV=$2
+VERSION=$3
 
 usage() {
-  echo "./backend-release.sh ENV VERSION"
+  echo "./backend-release.sh AWS_ACCOUNT_ID ENV VERSION"
   exit 1
 }
 
-if [ -z "$ENV" ]
+if [ -z "$ENV" ] || [ -z "$AWS_ACCOUNT_ID" ]
 then
   usage
 fi
@@ -26,4 +27,4 @@ then
 fi
 
 ./backend-build.sh $ENV $VERSION
-./backend-push.sh $ENV $VERSION
+./backend-push.sh $AWS_ACCOUNT_ID $ENV $VERSION

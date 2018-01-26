@@ -13,6 +13,16 @@ pipeline {
       description: 'Credential ID for backend dev db'
     )
     string(
+      name: 'TF_VARS',
+      defaultValue: 'tf-vars-file',
+      description: 'Credential ID for terraform variables file'
+    )
+    string(
+      name: 'TF_CONFIG',
+      defaultValue: 'tf-config-file',
+      description: 'Credential ID for terraform backend config file'
+    )
+    string(
       name: 'BRANCH',
       defaultValue: '*/master',
       description: 'The branch used to run the deploy.'
@@ -21,6 +31,8 @@ pipeline {
 
   environment {
     DB_PASS = credentials("${params.DB_PASS}")
+    TF_VARS = credentials("${params.TF_VARS}")
+    TF_CONFIG = credentials("${params.TF_CONFIG}")
   }
 
   stages {

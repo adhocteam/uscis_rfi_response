@@ -16,7 +16,12 @@ resource "aws_ecr_repository_policy" "main" {
         {
             "Sid": "new policy",
             "Effect": "Allow",
-            "Principal": "*",
+            "Principal": {
+              "AWS": [
+                "${var.admin_arn}",
+                "${var.jenkins_arn}"
+              ]
+            },
             "Action": [
                 "ecr:GetDownloadUrlForLayer",
                 "ecr:BatchGetImage",
