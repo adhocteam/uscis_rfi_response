@@ -3,3 +3,4 @@ terraform.tfstate.backup
 .terraform
 config/*/env
 *.retry
+*.tfvars
