@@ -8,4 +8,5 @@ Rails.application.routes.draw do
   post 'submissions/new_upload', to: 'submissions#new_upload'
   resources :submissions, only: [:index, :show, :create, :update]
   resource :admin, only: [:show]
+  get '/', to: 'application#index'
 end
