@@ -48,7 +48,7 @@
         "kms:GenerateDataKey"
       ],
       "Effect": "Allow",
-      "Resource": "arn:aws:kms:us-east-1:${account_id}:key/176febca-5a61-4a48-9bb9-79cc4e6d8216"
+      "Resource": "${kms_key_id}"
     },
     {
       "Sid": "Stmt1516368584838",
