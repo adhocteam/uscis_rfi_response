@@ -206,13 +206,6 @@ resource "aws_elb" "elb" {
   subnets         = ["${element(module.uscis_shared_vpc.subnets_ids, 0)}"]
 
   listener {
-    instance_port     = 80
-    instance_protocol = "http"
-    lb_port           = 80
-    lb_protocol       = "http"
-  }
-
-  listener {
     instance_port      = 80
     instance_protocol  = "http"
     lb_port            = 443
