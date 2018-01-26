@@ -31,10 +31,6 @@ data "aws_ami" "aws_linux" {
   owners = ["amazon"]
 }
 
-data "aws_kms_alias" "uscis_backend" {
-  name = "alias/uscis_backend"
-}
-
 resource "aws_security_group" "ssh" {
   name        = "ssh"
   description = "Allow SSH connections"
@@ -141,7 +137,7 @@ resource "aws_ebs_volume" "docker_home" {
   type              = "gp2"
   size              = 100
   encrypted         = true
-  kms_key_id        = "arn:aws:kms:us-east-1:${data.aws_caller_identity.current.account_id}:key/${data.aws_kms_alias.uscis_backend.target_key_id}"
+  kms_key_id        = "${var.kms_key_id}"
 
   tags {
     Name = "uscis-docker-home"
@@ -159,7 +155,7 @@ resource "aws_ebs_volume" "jenkins_home" {
   type              = "gp2"
   size              = 100
   encrypted         = true
-  kms_key_id        = "arn:aws:kms:us-east-1:${data.aws_caller_identity.current.account_id}:key/${data.aws_kms_alias.uscis_backend.target_key_id}"
+  kms_key_id        = "${var.kms_key_id}"
 
   tags {
     Name = "uscis-jenkins-home"
