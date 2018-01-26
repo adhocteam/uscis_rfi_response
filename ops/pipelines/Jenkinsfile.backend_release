@@ -57,7 +57,7 @@ pipeline {
       steps {
         sh """
           cd ops/scripts
-          ./backend-release.sh ${params.AWS_ACCOUNT_ID} dev ${params.VERSION}
+          ./backend-release.sh ${env.AWS_ACCOUNT_ID} dev ${params.VERSION}
         """
       }
     }
