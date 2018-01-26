@@ -106,6 +106,7 @@ data "template_file" "uscis_jenkins_policy" {
   template = "${file("${path.module}/templates/jenkins.json")}"
 
   vars {
+    kms_key_id = "${var.kms_key_id}"
     account_id = "${data.aws_caller_identity.current.account_id}"
   }
 }
