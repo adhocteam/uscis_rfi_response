@@ -67,6 +67,14 @@ resource "aws_security_group" "http" {
     security_groups = ["${aws_security_group.elb.id}"]
   }
 
+  # Health check endpoint
+  ingress {
+    from_port   = 8001
+    to_port     = 8001
+    protocol    = "tcp"
+    security_groups = ["${aws_security_group.elb.id}"]
+  }
+
   tags {
     Name = "uscis jenkins http"
   }
@@ -174,13 +182,6 @@ resource "aws_security_group" "elb" {
   vpc_id      = "${module.uscis_shared_vpc.vpc_id}"
 
   ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
@@ -224,7 +225,7 @@ resource "aws_elb" "elb" {
     unhealthy_threshold = 5
     timeout             = 5
     interval            = 10
-    target              = "HTTP:80/login"
+    target              = "HTTP:8001/_health"
   }
 
   instances    = ["${aws_instance.jenkins.id}"]
