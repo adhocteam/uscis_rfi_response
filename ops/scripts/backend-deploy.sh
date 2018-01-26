@@ -49,8 +49,7 @@ fi
 pushd ../terraform/$ENV/backend
 TF_OUT=$(terraform init -backend-config="$TF_CONFIG" && terraform plan \
   -var service_version=$VERSION \
-  -var db_password=$DB_PASS) \
-  -var-file="$TF_VARS"
+  -var-file="$TF_VARS")
 
 set +e
 TF_SRVC_CHECK=$(echo "$TF_OUT" | grep "module.uscis_backend.aws_ecs_service.main")
