@@ -2,11 +2,19 @@
 
 set -eu
 
+AWS_ACCOUNT_ID="$1"
+
+if [ -z "$AWS_ACCOUNT_ID" ]
+then
+  echo "An AWS account ID is required."
+  exit 1
+fi
+
 REPO="uscis-backend"
 REGION="us-east-1"
-FULLREPO="968246069280.dkr.ecr.us-east-1.amazonaws.com/$REPO"
-ENV=${1}
-TAG=${2:-latest}
+FULLREPO="${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$REPO"
+ENV=${2}
+TAG=${3:-latest}
 
 # Login to ECR
 $(aws ecr get-login --no-include-email --region=$REGION)

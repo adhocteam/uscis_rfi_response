@@ -7,6 +7,15 @@ pipeline {
       description: 'The commit hash or tag to deploy. Use the latest commit hash if empty.',
       name: 'VERSION'
     )
+    string(
+      name: 'AWS_ACCOUNT_ID',
+      defaultValue: 'aws-account-id',
+      description: 'Credential ID for aws account id'
+    )
+  }
+
+  environment {
+    AWS_ACCOUNT_ID = credentials("${params.AWS_ACCOUNT_ID}")
   }
 
   stages {
@@ -48,7 +57,7 @@ pipeline {
       steps {
         sh """
           cd ops/scripts
-          ./backend-release.sh dev ${params.VERSION}
+          ./backend-release.sh ${params.AWS_ACCOUNT_ID} dev ${params.VERSION}
         """
       }
     }
