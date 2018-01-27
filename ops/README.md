@@ -247,3 +247,6 @@ Example -- installing the aws cli tools:
 RUN apk add --no-cache py-pip && \
     pip install awscli
 ```
+
+### Appendix A - Architecture Diagram
+![Architecture Diagram](../images/architecture.png)
